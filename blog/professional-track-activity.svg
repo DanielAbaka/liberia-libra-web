@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="Professional Track activity">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9e2c2c"/>
+      <stop offset="100%" stop-color="#d45151"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g3)"/>
+  <path d="M760 120h340v180H760z" fill="#ffffff1e"/>
+  <path d="M760 340h340v220H760z" fill="#ffffff16"/>
+  <text x="72" y="300" fill="#ffffff" font-size="72" font-family="Montserrat, Arial, sans-serif" font-weight="700">
+    Professional Track
+  </text>
+  <text x="72" y="365" fill="#ffe3e3" font-size="36" font-family="Montserrat, Arial, sans-serif">
+    Leadership &amp; Project Clinic
+  </text>
+</svg>

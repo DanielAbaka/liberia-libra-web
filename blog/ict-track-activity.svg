@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="ICT Track activity">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a4b"/>
+      <stop offset="100%" stop-color="#3e3e8b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g1)"/>
+  <circle cx="960" cy="120" r="110" fill="#ffffff1f"/>
+  <circle cx="1040" cy="520" r="180" fill="#ffffff1a"/>
+  <text x="72" y="300" fill="#ffffff" font-size="72" font-family="Montserrat, Arial, sans-serif" font-weight="700">
+    ICT Track
+  </text>
+  <text x="72" y="365" fill="#d8d8ff" font-size="36" font-family="Montserrat, Arial, sans-serif">
+    Student Website Activity
+  </text>
+</svg>

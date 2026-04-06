@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="Vocational Track activity">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5a7a2e"/>
+      <stop offset="100%" stop-color="#84a851"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g2)"/>
+  <rect x="740" y="96" width="340" height="240" rx="22" fill="#ffffff22"/>
+  <rect x="810" y="372" width="260" height="180" rx="22" fill="#ffffff1a"/>
+  <text x="72" y="300" fill="#ffffff" font-size="72" font-family="Montserrat, Arial, sans-serif" font-weight="700">
+    Vocational Track
+  </text>
+  <text x="72" y="365" fill="#edf8db" font-size="36" font-family="Montserrat, Arial, sans-serif">
+    Practical Workshop Activity
+  </text>
+</svg>
