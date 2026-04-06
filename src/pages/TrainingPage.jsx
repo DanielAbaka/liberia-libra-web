@@ -1,0 +1,629 @@
+import { useEffect, useId, useMemo, useState } from "react";
+import {
+  TRAINING_BROCHURE_HREF,
+  TRAINING_CATEGORIES,
+  TRAINING_PROGRAMS,
+  flattenTrainingDates,
+} from "../data/trainingPrograms.js";
+
+const initialForm = {
+  fullName: "",
+  email: "",
+  phone: "",
+  message: "",
+};
+
+const DETAIL_TABS = [
+  { id: "curriculum", label: "Curriculum" },
+  { id: "schedule", label: "Schedule" },
+  { id: "cost", label: "Cost" },
+  { id: "dates", label: "Key dates" },
+];
+
+function formatLongDate(iso) {
+  try {
+    return new Date(`${iso}T12:00:00`).toLocaleDateString(undefined, {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
+function MonthCalendar({ year, month, highlightSet }) {
+  const first = new Date(year, month, 1);
+  const last = new Date(year, month + 1, 0);
+  const startPad = first.getDay();
+  const totalDays = last.getDate();
+  const cells = [];
+  for (let i = 0; i < startPad; i++) cells.push(null);
+  for (let d = 1; d <= totalDays; d++) cells.push(d);
+  const label = first.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
+  return (
+    <div className="rounded-xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
+      <p className="text-center text-sm font-semibold text-[#1a1a4b]">{label}</p>
+      <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[0.65rem] font-medium text-neutral-500 sm:text-xs">
+        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+          <div key={d} className="py-1">
+            {d}
+          </div>
+        ))}
+        {cells.map((day, i) => {
+          if (day == null) {
+            return <div key={`e-${i}`} className="min-h-8 sm:min-h-9" />;
+          }
+          const key = `${year}-${pad2(month + 1)}-${pad2(day)}`;
+          const hit = highlightSet.has(key);
+          return (
+            <div
+              key={key}
+              className={`flex min-h-8 items-center justify-center rounded-md text-xs sm:min-h-9 sm:text-sm ${
+                hit
+                  ? "bg-[var(--color-ll-accent)] font-semibold text-white"
+                  : "text-neutral-800"
+              }`}
+            >
+              {day}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ModalChrome({ children, titleId, onClose, wide }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:p-4 sm:items-center"
+      role="presentation"
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"
+        aria-label="Close dialog"
+        onClick={onClose}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className={`relative z-10 max-h-[min(92dvh,100vh)] w-full overflow-y-auto rounded-t-2xl border border-neutral-200 border-b-0 bg-white p-4 shadow-xl sm:max-h-[90vh] sm:rounded-xl sm:border-b sm:p-6 ${wide ? "max-w-2xl" : "max-w-lg"}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export function TrainingPage() {
+  const enrollTitleId = useId();
+  const detailsTitleId = useId();
+  const searchId = useId();
+
+  const [category, setCategory] = useState("all");
+  const [query, setQuery] = useState("");
+
+  const [detailsProgram, setDetailsProgram] = useState(null);
+  const [detailTab, setDetailTab] = useState("curriculum");
+
+  const [enrollOpen, setEnrollOpen] = useState(false);
+  const [enrollLabel, setEnrollLabel] = useState("");
+  const [form, setForm] = useState(initialForm);
+  const [sent, setSent] = useState(false);
+
+  const [calYear, setCalYear] = useState(() => new Date().getFullYear());
+  const [calMonth, setCalMonth] = useState(() => new Date().getMonth());
+
+  const filteredPrograms = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return TRAINING_PROGRAMS.filter((p) => {
+      if (category !== "all" && p.category !== category) return false;
+      if (!q) return true;
+      const blob = `${p.title} ${p.category} ${p.summary} ${p.curriculum.join(" ")}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }, [category, query]);
+
+  const allFlatDates = useMemo(() => flattenTrainingDates(TRAINING_PROGRAMS), []);
+
+  const highlightSet = useMemo(() => {
+    const s = new Set();
+    for (const row of allFlatDates) {
+      s.add(row.date);
+    }
+    return s;
+  }, [allFlatDates]);
+
+  const upcomingList = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    return allFlatDates.filter((r) => r.date >= today).slice(0, 12);
+  }, [allFlatDates]);
+
+  const modalOpen = enrollOpen || detailsProgram != null;
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setDetailsProgram(null);
+        setEnrollOpen(false);
+        setSent(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [modalOpen]);
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [modalOpen]);
+
+  function openDetails(p) {
+    setDetailTab("curriculum");
+    setDetailsProgram(p);
+  }
+
+  function openEnroll(programTitle) {
+    setEnrollLabel(programTitle);
+    setForm(initialForm);
+    setSent(false);
+    setEnrollOpen(true);
+  }
+
+  function closeEnroll() {
+    setEnrollOpen(false);
+    setSent(false);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setSent(true);
+  }
+
+  function updateField(field, value) {
+    setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  function shiftMonth(delta) {
+    const d = new Date(calYear, calMonth + delta, 1);
+    setCalYear(d.getFullYear());
+    setCalMonth(d.getMonth());
+  }
+
+  return (
+    <div className="min-h-[50vh] overflow-x-hidden px-3 py-10 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-[1120px]">
+        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
+          Training programs
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+          Each card is a full training track. Filter or search, open a track for
+          curriculum, schedule, and cost, review key dates on the calendar, and
+          download the brochure. Wire enrollment to your API or form provider when
+          ready.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-4 min-[480px]:flex-row min-[480px]:items-end min-[480px]:justify-between sm:mt-8">
+          <div className="min-w-0 flex-1">
+            <label htmlFor={searchId} className="sr-only">
+              Search tracks
+            </label>
+            <input
+              id={searchId}
+              type="search"
+              placeholder="Search tracks…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-[var(--color-ll-accent)] sm:text-sm"
+              autoComplete="off"
+            />
+          </div>
+          <a
+            href={TRAINING_BROCHURE_HREF}
+            download
+            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-neutral-300 bg-white px-4 text-sm font-semibold text-[#1a1a4b] hover:bg-neutral-50"
+          >
+            Download brochure (PDF)
+          </a>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setCategory("all")}
+            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition min-[400px]:text-sm ${
+              category === "all"
+                ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white"
+                : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400"
+            }`}
+          >
+            All
+          </button>
+          {TRAINING_CATEGORIES.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategory(c)}
+              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition min-[400px]:text-sm ${
+                category === c
+                  ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white"
+                  : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
+        <p className="mt-4 text-xs text-neutral-500 sm:text-sm" aria-live="polite">
+          Showing {filteredPrograms.length} of {TRAINING_PROGRAMS.length} tracks
+        </p>
+
+        <ul className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:grid-cols-3">
+          {filteredPrograms.map((p) => (
+            <li
+              key={p.id}
+              className="flex min-w-0 flex-col rounded-xl border border-neutral-200 bg-white p-4 shadow-sm min-[480px]:p-5"
+            >
+              <h2 className="text-base font-semibold leading-snug text-neutral-900 sm:text-lg">
+                {p.title}
+              </h2>
+              <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
+                {p.summary}
+              </p>
+              <div className="mt-4 flex flex-col gap-2 min-[400px]:flex-row min-[400px]:flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => openDetails(p)}
+                  className="inline-flex min-h-10 items-center justify-center rounded-lg border border-neutral-300 bg-neutral-50 px-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-100"
+                >
+                  View details
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openEnroll(p.title)}
+                  className="inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] hover:underline min-[400px]:px-2"
+                >
+                  Register interest →
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {filteredPrograms.length === 0 ? (
+          <p className="mt-8 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-sm text-neutral-600">
+            No tracks match your filters. Try &quot;All&quot; or clear the search.
+          </p>
+        ) : null}
+
+        <section
+          className="mt-12 border-t border-neutral-200 pt-10 sm:mt-16 sm:pt-12"
+          aria-labelledby="cal-heading"
+        >
+          <h2
+            id="cal-heading"
+            className="font-[family-name:var(--font-display)] text-xl font-bold text-[#1a1a4b] sm:text-2xl"
+          >
+            Training calendar
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-neutral-600">
+            Month view highlights any day with a scheduled milestone across tracks.
+            Use the arrows to browse months.
+          </p>
+          <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-start">
+            <div className="w-full max-w-md shrink-0">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => shiftMonth(-1)}
+                  className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+                >
+                  ← Prev
+                </button>
+                <button
+                  type="button"
+                  onClick={() => shiftMonth(1)}
+                  className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+                >
+                  Next →
+                </button>
+              </div>
+              <MonthCalendar year={calYear} month={calMonth} highlightSet={highlightSet} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold text-neutral-900">Upcoming milestones</h3>
+              <ul className="mt-3 divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
+                {upcomingList.length === 0 ? (
+                  <li className="p-4 text-sm text-neutral-500">No upcoming dates on file.</li>
+                ) : (
+                  upcomingList.map((row) => (
+                    <li
+                      key={`${row.programId}-${row.date}-${row.label}`}
+                      className="flex flex-col gap-0.5 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-neutral-900">{row.label}</p>
+                        <p className="text-xs text-neutral-600">{row.programTitle}</p>
+                      </div>
+                      <time
+                        dateTime={row.date}
+                        className="shrink-0 text-sm font-semibold text-[var(--color-ll-accent)]"
+                      >
+                        {formatLongDate(row.date)}
+                      </time>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <p className="mt-8 text-xs leading-relaxed text-neutral-500 sm:text-sm">
+          Place your PDF at{" "}
+          <code className="break-all rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800">
+            public/assets/libra-training-brochure.pdf
+          </code>{" "}
+          for the download button to work in production builds.
+        </p>
+      </div>
+
+      {detailsProgram ? (
+        <ModalChrome titleId={detailsTitleId} wide onClose={() => setDetailsProgram(null)}>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2
+                id={detailsTitleId}
+                className="font-[family-name:var(--font-display)] text-lg font-bold leading-tight text-[#1a1a4b] sm:text-xl"
+              >
+                {detailsProgram.title}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDetailsProgram(null)}
+              className="shrink-0 rounded-md p-1 text-neutral-500 hover:bg-neutral-100"
+              aria-label="Close"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            role="tablist"
+            aria-label="Track details"
+            className="mt-4 flex flex-wrap gap-1 border-b border-neutral-200 pb-2"
+          >
+            {DETAIL_TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={detailTab === t.id}
+                onClick={() => setDetailTab(t.id)}
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold sm:text-sm ${
+                  detailTab === t.id
+                    ? "bg-[var(--color-ll-accent)] text-white"
+                    : "text-neutral-700 hover:bg-neutral-100"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 text-sm text-neutral-700">
+            {detailTab === "curriculum" ? (
+              <ul className="space-y-2">
+                {detailsProgram.curriculum.map((line) => (
+                  <li
+                    key={line}
+                    className={
+                      line === "Beginner Certificate Courses:" ||
+                      line === "Intermediate Certificate Courses:" ||
+                      line === "Advanced Certificate Courses:" ||
+                      line === "Professional Certificate Courses:" ||
+                      line === "Vocational Certificate Courses:"
+                        ? "mt-4 text-base font-bold text-[#1a1a4b] first:mt-0 sm:text-lg"
+                        : "ml-5 list-item list-disc"
+                    }
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {detailTab === "schedule" ? (
+              <p className="leading-relaxed">{detailsProgram.schedule}</p>
+            ) : null}
+            {detailTab === "cost" ? <p className="leading-relaxed">{detailsProgram.cost}</p> : null}
+            {detailTab === "dates" ? (
+              <ul className="space-y-3">
+                {detailsProgram.keyDates.map((kd) => (
+                  <li
+                    key={`${kd.date}-${kd.label}`}
+                    className="flex flex-col gap-0.5 border-b border-neutral-100 pb-3 last:border-0 sm:flex-row sm:justify-between"
+                  >
+                    <span className="font-medium text-neutral-900">{kd.label}</span>
+                    <time className="text-[var(--color-ll-accent)]" dateTime={kd.date}>
+                      {formatLongDate(kd.date)}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                openEnroll(detailsProgram.title);
+                setDetailsProgram(null);
+              }}
+              className="min-h-11 rounded-lg bg-[var(--color-ll-accent)] px-4 py-2 text-sm font-semibold text-white hover:brightness-110"
+            >
+              Register interest
+            </button>
+            <button
+              type="button"
+              onClick={() => setDetailsProgram(null)}
+              className="min-h-11 rounded-lg border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-800 hover:bg-neutral-50"
+            >
+              Close
+            </button>
+          </div>
+        </ModalChrome>
+      ) : null}
+
+      {enrollOpen ? (
+        <ModalChrome titleId={enrollTitleId} onClose={closeEnroll}>
+          <div className="flex items-start justify-between gap-3">
+            <h2
+              id={enrollTitleId}
+              className="font-[family-name:var(--font-display)] text-lg font-bold leading-tight text-[#1a1a4b] sm:text-xl"
+            >
+              Course pre-enrollment
+            </h2>
+            <button
+              type="button"
+              onClick={closeEnroll}
+              className="rounded-md p-1 text-neutral-500 hover:bg-neutral-100"
+              aria-label="Close"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <p className="mt-1 text-xs text-neutral-600 sm:text-sm">
+            Tell us how to reach you—we’ll follow up with schedule and next steps.
+          </p>
+
+          {sent ? (
+            <>
+              <p
+                className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800 sm:p-4"
+                role="status"
+              >
+                Thank you, <strong>{form.fullName || "there"}</strong>. Your interest in{" "}
+                <strong>{enrollLabel}</strong> has been recorded (demo—connect to your
+                backend or form service).
+              </p>
+              <button
+                type="button"
+                onClick={closeEnroll}
+                className="mt-5 w-full min-h-11 rounded-lg bg-[var(--color-ll-accent)] py-2.5 text-sm font-semibold text-white hover:brightness-110 sm:w-auto sm:px-8"
+              >
+                Close
+              </button>
+            </>
+          ) : (
+            <form className="mt-5 space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="pre-course" className="block text-xs font-medium sm:text-sm">
+                  Program
+                </label>
+                <input
+                  id="pre-course"
+                  readOnly
+                  value={enrollLabel}
+                  className="mt-1 w-full min-h-11 cursor-default rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm text-neutral-800"
+                />
+              </div>
+              <div>
+                <label htmlFor="pre-name" className="block text-xs font-medium sm:text-sm">
+                  Full name *
+                </label>
+                <input
+                  id="pre-name"
+                  name="fullName"
+                  required
+                  autoComplete="name"
+                  value={form.fullName}
+                  onChange={(e) => updateField("fullName", e.target.value)}
+                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="pre-email" className="block text-xs font-medium sm:text-sm">
+                  Email *
+                </label>
+                <input
+                  id="pre-email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => updateField("email", e.target.value)}
+                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="pre-phone" className="block text-xs font-medium sm:text-sm">
+                  Phone
+                </label>
+                <input
+                  id="pre-phone"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  value={form.phone}
+                  onChange={(e) => updateField("phone", e.target.value)}
+                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="pre-message" className="block text-xs font-medium sm:text-sm">
+                  Message <span className="font-normal text-neutral-500">(optional)</span>
+                </label>
+                <textarea
+                  id="pre-message"
+                  name="message"
+                  rows={3}
+                  value={form.message}
+                  onChange={(e) => updateField("message", e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-2 pt-2 min-[400px]:flex-row">
+                <button
+                  type="submit"
+                  className="min-h-11 w-full rounded-lg bg-[var(--color-ll-accent)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110 min-[400px]:w-auto"
+                >
+                  Submit registration
+                </button>
+                <button
+                  type="button"
+                  onClick={closeEnroll}
+                  className="min-h-11 w-full rounded-lg border border-neutral-300 px-5 py-2.5 text-sm font-semibold hover:bg-neutral-50 min-[400px]:w-auto"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </ModalChrome>
+      ) : null}
+    </div>
+  );
+}

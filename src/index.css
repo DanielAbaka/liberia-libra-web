@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --color-ll-bg: #0a0a2e;
+  --color-ll-elevated: #121244;
+  --color-ll-surface: #1a1a4b;
+  --color-ll-footer: #1a1a4b;
+  --color-ll-accent: #d32f2f;
+  --color-ll-accent-dim: #8bc34a;
+  --color-ll-muted: #b4b7dc;
+  --color-ll-page: #ffffff;
+  --color-ll-page-text: #1a1a24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--color-ll-page);
+  color: var(--color-ll-page-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes hero-copy {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
