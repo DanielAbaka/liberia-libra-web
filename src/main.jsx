@@ -4,9 +4,14 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 
+// GitHub Pages URLs use lowercase paths; basename must not have a trailing slash.
+const base = import.meta.env.BASE_URL;
+const basename =
+  base === "/" ? undefined : base.replace(/\/+$/, "") || undefined;
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </StrictMode>

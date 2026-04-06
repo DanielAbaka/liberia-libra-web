@@ -33,10 +33,17 @@ jobs:
 
       - run: npm ci
 
+      # GitHub Pages URLs are lowercase; mixed-case repo names break script/CSS loads → blank page
       - name: Build
+        shell: bash
         env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: npm run build
+          REPO_RAW: ${{ github.event.repository.name }}
+        run: |
+          export VITE_BASE_PATH="/${REPO_RAW,,}/"
+          npm run build
+
+      - name: SPA fallback (refresh deep links on GitHub Pages)
+        run: cp dist/index.html dist/404.html
 
       - name: Deploy to gh-pages branch
         uses: JamesIves/github-pages-deploy-action@v4
