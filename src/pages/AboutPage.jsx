@@ -7,9 +7,10 @@ const TEAM = [
     linkedinQr: "/team/daniel-abaka-linkedin.png",
   },
   {
-    name: "Jane Smith",
-    role: "Head of Training",
-    bio: "Designs vocational and professional tracks and supports instructor quality.",
+    name: "Asalyne C. Browne",
+    role: "Chief Executive Officer",
+    photo: "/team/asalyne-browne.png",
+    linkedinQr: "/team/asalyne-browne-linkedin.png",
   },
   {
     name: "Michael Johnson",
@@ -43,16 +44,21 @@ const TEAM = [
   },
 ];
 
+const teamMediaWrapClass =
+  "mx-auto w-full max-w-[min(100%,14rem)] shrink-0 min-[480px]:mx-0 min-[480px]:max-w-none";
+
+function initialsFromName(name) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 function TeamAvatar({ name }) {
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = initialsFromName(name);
   return (
     <div
-      className="flex aspect-[3/4] w-full max-h-52 items-center justify-center rounded-xl bg-neutral-100 text-2xl font-bold tracking-tight text-[#1a1a4b] ring-1 ring-inset ring-neutral-200 min-[400px]:aspect-[4/5] min-[400px]:max-h-none min-[400px]:text-3xl sm:text-4xl"
+      className="flex aspect-square w-full items-center justify-center rounded-full bg-neutral-100 text-xl font-bold tracking-tight text-[#1a1a4b] ring-2 ring-neutral-200 min-[480px]:text-3xl sm:text-4xl"
       aria-hidden
     >
       {initials}
@@ -61,17 +67,20 @@ function TeamAvatar({ name }) {
 }
 
 function TeamPhoto({ member }) {
+  const wrap = (node) => <div className={teamMediaWrapClass}>{node}</div>;
+
   if (member.photo) {
-    return (
+    return wrap(
       <img
         src={member.photo}
         alt={member.name}
-        className="aspect-[3/4] w-full max-h-52 rounded-xl object-cover ring-1 ring-inset ring-neutral-200 min-[400px]:aspect-[4/5] min-[400px]:max-h-none"
+        className="aspect-square w-full rounded-full bg-white object-cover object-center ring-2 ring-neutral-200"
         loading="lazy"
-      />
+        decoding="async"
+      />,
     );
   }
-  return <TeamAvatar name={member.name} />;
+  return wrap(<TeamAvatar name={member.name} />);
 }
 
 export function AboutPage() {
@@ -163,7 +172,7 @@ export function AboutPage() {
                   <img
                     src={member.linkedinQr}
                     alt={`${member.name} — LinkedIn`}
-                    className="mt-1 w-full max-w-[220px] rounded-lg border border-neutral-200 bg-white object-contain object-left p-2 shadow-sm"
+                    className="mx-auto mt-1 w-full max-w-[min(100%,14rem)] rounded-lg border border-neutral-200 bg-white object-contain p-2 shadow-sm min-[480px]:mx-0 min-[480px]:max-w-[220px]"
                     loading="lazy"
                   />
                 </div>
