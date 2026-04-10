@@ -3,15 +3,15 @@ import { HeroSlider } from "../components/HeroSlider.jsx";
 import { BLOG_POSTS } from "../data/blogPosts.js";
 
 const btnPrimary =
-  "inline-flex min-h-11 min-w-[44px] items-center justify-center rounded-full bg-[var(--color-ll-accent)] px-5 py-2.5 text-sm font-semibold text-white no-underline hover:brightness-110 sm:px-6";
+  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full bg-[var(--color-ll-accent)] px-4 py-2 text-xs font-semibold text-white no-underline hover:brightness-110 min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
 const btnGhost =
-  "inline-flex min-h-11 min-w-[44px] items-center justify-center rounded-full border border-white/25 bg-black/20 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm no-underline hover:bg-white/10 sm:px-6";
+  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full border border-white/25 bg-black/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm no-underline hover:bg-white/10 min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
 
 export function HomePage() {
   return (
     <div className="overflow-x-hidden">
       <HeroSlider>
-        <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+        <div className="mt-4 flex flex-wrap gap-2 min-[400px]:mt-6 min-[400px]:gap-3 sm:mt-8">
           <Link to="/services" className={btnPrimary}>
             View services
           </Link>

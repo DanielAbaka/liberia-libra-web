@@ -45,7 +45,7 @@ export function Header() {
 
         <button
           type="button"
-          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[var(--color-ll-surface)] md:hidden"
+          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[var(--color-ll-surface)] text-white md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}

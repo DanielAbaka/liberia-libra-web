@@ -69,15 +69,18 @@ export function HeroSlider({ children }) {
 
   return (
     <section
-      className="relative flex min-h-[min(72svh,640px)] overflow-hidden min-[480px]:min-h-[min(80svh,720px)] sm:min-h-[min(85vh,760px)]"
+      className="relative flex min-h-[min(68svh,560px)] overflow-hidden min-[480px]:min-h-[min(80svh,720px)] sm:min-h-[min(85vh,760px)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="absolute inset-0" aria-hidden>
+      <div
+        className="absolute inset-0 bg-[var(--color-ll-bg)]"
+        aria-hidden
+      >
         <img
           src={HERO_IMAGE_SRC}
           alt={HERO_IMAGE_ALT}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain object-center min-[480px]:object-cover min-[480px]:object-center"
           loading="eager"
           fetchPriority="high"
         />
@@ -88,20 +91,20 @@ export function HeroSlider({ children }) {
         <div className="absolute inset-0 bg-black/10" aria-hidden />
       </div>
 
-      <div className="relative z-10 flex w-full flex-col justify-center px-3 py-12 min-[400px]:px-4 sm:px-6 sm:py-24">
+      <div className="relative z-10 flex w-full flex-col justify-center px-3 py-8 min-[400px]:px-4 min-[480px]:py-12 sm:px-6 sm:py-24">
         <div className="mx-auto w-full min-w-0 max-w-[1120px]">
           <div
             key={slide.id}
             className="motion-reduce:animate-none [animation:hero-copy_0.35s_ease-out_both]"
             aria-live="polite"
           >
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[var(--color-ll-accent-dim)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)] min-[400px]:text-xs sm:tracking-[0.15em]">
+            <p className="text-[0.6rem] font-bold uppercase tracking-[0.1em] text-[var(--color-ll-accent-dim)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)] min-[360px]:text-[0.65rem] min-[400px]:text-xs sm:tracking-[0.15em]">
               {slide.eyebrow}
             </p>
-            <h1 className="mt-2 max-w-xl font-[family-name:var(--font-display)] text-2xl font-bold leading-[1.15] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] min-[400px]:text-3xl sm:mt-3 sm:text-4xl md:text-5xl">
+            <h1 className="mt-1.5 max-w-[20rem] font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] min-[360px]:mt-2 min-[360px]:max-w-xl min-[360px]:text-2xl min-[360px]:leading-[1.15] min-[480px]:text-3xl sm:mt-3 sm:text-4xl md:text-5xl">
               {slide.headline}
             </h1>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.8)] min-[400px]:text-base sm:mt-5 sm:text-lg">
+            <p className="mt-3 max-w-lg text-xs leading-relaxed text-white/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.85)] min-[400px]:mt-4 min-[400px]:text-sm sm:mt-5 sm:text-base md:text-lg">
               {slide.subtext}
             </p>
           </div>
