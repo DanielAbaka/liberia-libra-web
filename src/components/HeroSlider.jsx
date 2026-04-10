@@ -69,7 +69,7 @@ export function HeroSlider({ children }) {
 
   return (
     <section
-      className="relative flex min-h-[min(68svh,560px)] overflow-hidden min-[480px]:min-h-[min(80svh,720px)] sm:min-h-[min(85vh,760px)]"
+      className="relative flex min-h-[min(60svh,520px)] overflow-hidden min-[480px]:min-h-[min(72svh,640px)] sm:min-h-[min(80svh,720px)] md:min-h-[min(85vh,760px)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -80,7 +80,7 @@ export function HeroSlider({ children }) {
         <img
           src={HERO_IMAGE_SRC}
           alt={HERO_IMAGE_ALT}
-          className="absolute inset-0 h-full w-full object-contain object-center min-[480px]:object-cover min-[480px]:object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[center_30%] min-[480px]:object-[center_35%] md:object-center"
           loading="eager"
           fetchPriority="high"
         />
