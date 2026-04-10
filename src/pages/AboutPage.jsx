@@ -1,9 +1,10 @@
-/** Optional `photo`: path under public, e.g. "/team/clarence.jpg" */
+/** Optional `photo` / `linkedinQr`: paths under public, e.g. "/team/daniel-abaka.png" */
 const TEAM = [
   {
-    name: "Clarence Doe",
-    role: "Chief Executive Officer",
-    bio: "Leads strategy and partnerships across ICT, media, and training programs.",
+    name: "Daniel Abaka",
+    role: "Founder/Executive Director",
+    photo: "/team/daniel-abaka.png",
+    linkedinQr: "/team/daniel-abaka-linkedin.png",
   },
   {
     name: "Jane Smith",
@@ -136,12 +137,12 @@ export function AboutPage() {
           Our team
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-          Meet the people behind Liberia Libra. Replace photos and bios with your
-          real leadership and staff—drop images in{" "}
+          Meet the people behind Liberia Libra. Add headshots and optional LinkedIn QR
+          images under{" "}
           <code className="break-all rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800 sm:break-normal sm:text-sm">
             public/team/
           </code>{" "}
-          and wire them in when ready.
+          using the <code className="rounded bg-neutral-200 px-1 py-0.5 text-[0.7rem]">linkedinQr</code> field on each member.
         </p>
 
         <ul className="mt-8 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:gap-8 xl:grid-cols-4">
@@ -157,9 +158,20 @@ export function AboutPage() {
               <p className="mt-1 text-xs font-medium leading-snug text-[var(--color-ll-accent)] sm:text-sm">
                 {member.role}
               </p>
-              <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
-                {member.bio}
-              </p>
+              {"linkedinQr" in member && member.linkedinQr ? (
+                <div className="mt-2 flex-1">
+                  <img
+                    src={member.linkedinQr}
+                    alt={`${member.name} — LinkedIn`}
+                    className="mt-1 w-full max-w-[220px] rounded-lg border border-neutral-200 bg-white object-contain object-left p-2 shadow-sm"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
+                  {member.bio}
+                </p>
+              )}
             </li>
           ))}
         </ul>
