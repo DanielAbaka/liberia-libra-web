@@ -205,6 +205,13 @@ export function SupportChatWidget() {
                   Training
                 </Link>
                 <Link
+                  to="/gallery"
+                  onClick={close}
+                  className="rounded-full border border-[#1a1a4b] px-3 py-1.5 text-xs font-semibold text-[#1a1a4b] no-underline hover:bg-neutral-50"
+                >
+                  Gallery
+                </Link>
+                <Link
                   to="/blog"
                   onClick={close}
                   className="rounded-full border border-[#1a1a4b] px-3 py-1.5 text-xs font-semibold text-[#1a1a4b] no-underline hover:bg-neutral-50"

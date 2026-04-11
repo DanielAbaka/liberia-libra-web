@@ -6,6 +6,7 @@ import { ServicesPage } from "./pages/ServicesPage.jsx";
 import { TrainingPage } from "./pages/TrainingPage.jsx";
 import { PortfolioPage } from "./pages/PortfolioPage.jsx";
 import { BlogPage } from "./pages/BlogPage.jsx";
+import { GalleryPage } from "./pages/GalleryPage.jsx";
 import { ContactPage } from "./pages/ContactPage.jsx";
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="services" element={<ServicesPage />} />
         <Route path="training" element={<TrainingPage />} />
         <Route path="portfolio" element={<PortfolioPage />} />
+        <Route path="gallery" element={<GalleryPage />} />
         <Route path="blog" element={<BlogPage />} />
         <Route path="contact" element={<ContactPage />} />
       </Route>

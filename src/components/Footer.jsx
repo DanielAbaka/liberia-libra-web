@@ -51,6 +51,14 @@ export function Footer() {
             </li>
             <li>
               <Link
+                to="/gallery"
+                className="text-neutral-700 hover:text-[var(--color-ll-accent)]"
+              >
+                Gallery
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/portfolio"
                 className="text-neutral-700 hover:text-[var(--color-ll-accent)]"
               >
@@ -74,11 +82,18 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="mailto:info@example.com"
+                href="mailto:liberialibrainc@gmail.com"
                 className="text-neutral-700 hover:text-[var(--color-ll-accent)]"
               >
                 liberialibrainc@gmail.com
               </a>
+            </li>
+            <li>
+              <strong className="text-neutral-900">Phone</strong>
+              <br />
+              <span className="text-neutral-600">
+                +231 777 000 000 031
+              </span>
             </li>
           </ul>
         </div>
@@ -87,10 +102,10 @@ export function Footer() {
             Social
           </h3>
           <div className="mt-3 flex flex-wrap gap-2">
-            {["LinkedIn", "Facebook", "X"].map((s) => (
+            {["Facebook"].map((s) => (
               <a
                 key={s}
-                href="#"
+                href="https://www.facebook.com/libraincorporated"
                 className="inline-flex min-h-9 items-center rounded-md border border-neutral-300 bg-white px-2.5 py-1.5 text-xs text-neutral-700 hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)]"
               >
                 {s}
