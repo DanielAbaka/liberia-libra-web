@@ -77,7 +77,7 @@ export function Footer() {
                 href="mailto:info@example.com"
                 className="text-neutral-700 hover:text-[var(--color-ll-accent)]"
               >
-                info@example.com
+                liberialibrainc@gmail.com
               </a>
             </li>
           </ul>
