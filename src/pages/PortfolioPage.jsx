@@ -97,8 +97,7 @@ export function PortfolioPage() {
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
             Organizations we have worked for through paid contracts or volunteer
             engagements—delivering media, training, and publishing services on
-            brief. Below are examples of the live coverage and production support we
-            have provided.
+            brief.
           </p>
           <ul className="mx-auto mt-8 grid max-w-6xl grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:grid-cols-3">
             {PARTNERS.map((partner) => (
