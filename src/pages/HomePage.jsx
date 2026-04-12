@@ -61,39 +61,51 @@ export function HomePage() {
                 title: "ICT consultancy",
                 text: "Technology planning and implementation support.",
                 to: "/services",
+                Icon: IconIct,
               },
               {
                 title: "Media consultancy",
                 text: "Creative and campaign guidance.",
                 to: "/services",
+                Icon: IconMedia,
               },
               {
                 title: "Desktop publishing",
                 text: "Professional layouts and print-ready files.",
                 to: "/services",
+                Icon: IconLayout,
               },
               {
                 title: "Training programs",
                 text: "Structured learning paths for teams and individuals.",
                 to: "/training",
+                Icon: IconTraining,
               },
             ].map((c) => (
               <li
                 key={c.title}
-                className="flex min-w-0 flex-col rounded-xl border border-neutral-200 bg-neutral-50 p-4 shadow-sm min-[480px]:p-5"
+                className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 shadow-sm"
               >
-                <h3 className="text-base font-semibold leading-snug text-neutral-900">
-                  {c.title}
-                </h3>
-                <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
-                  {c.text}
-                </p>
-                <Link
-                  to={c.to}
-                  className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] no-underline hover:underline"
+                <div
+                  className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#1a1a4b]/[0.07] to-[#5a7a2e]/[0.12]"
+                  aria-hidden
                 >
-                  Learn more →
-                </Link>
+                  <c.Icon className="h-12 w-12 text-[#1a1a4b] sm:h-14 sm:w-14" />
+                </div>
+                <div className="flex flex-1 flex-col p-4 min-[480px]:p-5">
+                  <h3 className="text-base font-semibold leading-snug text-neutral-900">
+                    {c.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
+                    {c.text}
+                  </p>
+                  <Link
+                    to={c.to}
+                    className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] no-underline hover:underline"
+                  >
+                    Learn more →
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
@@ -158,5 +170,78 @@ export function HomePage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function IconIct({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <path d="M8 21h8M12 17v4" />
+    </svg>
+  );
+}
+
+function IconMedia({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M3 11l18-5v12L3 13v-2z" />
+      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </svg>
+  );
+}
+
+function IconLayout({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+      <path d="M13 2v7h7" />
+      <path d="M8 13h8M8 17h8M8 9h5" />
+    </svg>
+  );
+}
+
+function IconTraining({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
   );
 }

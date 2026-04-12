@@ -4,7 +4,7 @@ export const BLOG_POSTS = [
     track: "ICT Track",
     date: "Apr 2, 2026",
     title: "Students launched their first team website",
-    image: "/blog/ict-track-activity.svg",
+    image: "/gallery/ict-training-07.png",
     summary:
       "Learners completed a guided build sprint and published a responsive class showcase site with forms and content updates.",
     details:
@@ -15,7 +15,7 @@ export const BLOG_POSTS = [
     track: "Vocational Track",
     date: "Mar 28, 2026",
     title: "Garment and wiring practical assessment day",
-    image: "/blog/vocational-track-activity.svg",
+    image: "/gallery/cosmetology-training-09.png",
     summary:
       "Trainees presented stitched samples and demonstrated safe wiring installation checks during supervised lab stations.",
     details:
@@ -26,7 +26,7 @@ export const BLOG_POSTS = [
     track: "Professional Track",
     date: "Mar 20, 2026",
     title: "Leadership role-play and project clinic",
-    image: "/blog/professional-track-activity.svg",
+    image: "/gallery/ict-training-19.png",
     summary:
       "Participants practiced feedback conversations, scoped mini-project charters, and shared milestone plans with peer review.",
     details:
@@ -37,7 +37,7 @@ export const BLOG_POSTS = [
     track: "ICT Track",
     date: "Mar 10, 2026",
     title: "Digital safety lab and phishing simulation",
-    image: "/blog/ict-track-activity.svg",
+    image: "/gallery/ict-training-02.png",
     summary:
       "Students reviewed password hygiene, scam patterns, and email verification in a guided cyber awareness exercise.",
     details:
@@ -48,7 +48,7 @@ export const BLOG_POSTS = [
     track: "Vocational Track",
     date: "Mar 4, 2026",
     title: "Pattern drafting clinic and quality checks",
-    image: "/blog/vocational-track-activity.svg",
+    image: "/gallery/cosmetology-training-14.png",
     summary:
       "Trainees drafted base patterns, cut sample pieces, and practiced finishing standards for customer-ready output.",
     details:
@@ -59,7 +59,7 @@ export const BLOG_POSTS = [
     track: "Professional Track",
     date: "Feb 26, 2026",
     title: "Stakeholder mapping and meeting facilitation",
-    image: "/blog/professional-track-activity.svg",
+    image: "/gallery/ict-training-27.png",
     summary:
       "Participants mapped stakeholder influence and practiced running focused team meetings with clear decisions.",
     details:
@@ -70,7 +70,7 @@ export const BLOG_POSTS = [
     track: "ICT Track",
     date: "Feb 18, 2026",
     title: "Spreadsheet dashboards for small teams",
-    image: "/blog/ict-track-activity.svg",
+    image: "/gallery/ict-training-22.png",
     summary:
       "Learners built simple dashboards for attendance, costs, and progress tracking using practical spreadsheet formulas.",
     details:
@@ -81,7 +81,7 @@ export const BLOG_POSTS = [
     track: "Vocational Track",
     date: "Feb 12, 2026",
     title: "Electrical load planning and circuit testing",
-    image: "/blog/vocational-track-activity.svg",
+    image: "/gallery/general-catering-training-16.png",
     summary:
       "The cohort practiced circuit load estimation and safe test procedures with supervised bench exercises.",
     details:
@@ -92,7 +92,7 @@ export const BLOG_POSTS = [
     track: "Professional Track",
     date: "Feb 5, 2026",
     title: "Project scope breakdown and risk logs",
-    image: "/blog/professional-track-activity.svg",
+    image: "/gallery/ict-training-32.png",
     summary:
       "Participants converted broad goals into task breakdowns and established lightweight risk and change logs.",
     details:

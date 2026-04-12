@@ -1,46 +1,56 @@
-/** Optional `photo` / `linkedinQr`: paths under public, e.g. "/team/daniel-abaka.png" */
+/** Optional `photo` / `photoObjectPosition` (Tailwind classes, e.g. `object-[50%_18%]`) */
 const TEAM = [
   {
     name: "Daniel Abaka",
     role: "Founder/Executive Director",
     photo: "/team/daniel-abaka.png",
-    linkedinQr: "/team/daniel-abaka-linkedin.png",
+    bio: "Sets strategic direction, stewards the organization's vision, and leads senior partnerships, governance, and long-term growth.",
   },
   {
     name: "Asalyne C. Browne",
     role: "Chief Executive Officer",
     photo: "/team/asalyne-browne.png",
-    linkedinQr: "/team/asalyne-browne-linkedin.png",
+    bio: "Leads executive strategy, organizational performance, and alignment across programs, teams, and external stakeholders.",
   },
   {
-    name: "Michael Johnson",
-    role: "ICT Lead",
-    bio: "Oversees digital projects, systems integration, and technical consultancy.",
+    name: "Israel Z. Kollie",
+    role: "Chief Technology Officer",
+    photo: "/team/israel-z-kollie.png?v=2",
+    photoObjectPosition: "object-[50%_12%]",
+    bio: "Leads technology strategy, architecture, and engineering across the organization's digital platforms.",
   },
   {
-    name: "Patience Weah",
-    role: "Media & Communications",
-    bio: "Guides campaigns, creative production, and public-facing content.",
+    name: "Tanu J. Kpedebah",
+    role: "Chief Operation Officer",
+    photo: "/team/tanu-j-kpedebah.png",
+    bio: "Oversees day-to-day operations, cross-functional programs, and organizational execution.",
   },
   {
-    name: "Samuel Kromah",
-    role: "Operations Manager",
+    name: "Peter Barclay",
+    role: "Operations Coordinator",
+    photo: "/team/peter-barclay.png",
     bio: "Coordinates logistics, vendor relationships, and day-to-day program delivery.",
   },
   {
-    name: "Ellen Cooper",
-    role: "Finance & Administration",
-    bio: "Manages budgets, reporting, and internal systems for the organization.",
+    name: "Naomi Dweh",
+    role: "Administrative Assistant",
+    photo: "/team/naomi-dweh.png",
+    photoObjectPosition: "object-[50%_18%]",
+    bio: "Supports scheduling, records, and day-to-day administrative coordination across teams.",
   },
   {
-    name: "David Massaquoi",
-    role: "Desktop Publishing Lead",
-    bio: "Produces print-ready layouts, branding assets, and publication quality control.",
+    name: "Mark D. Wreh",
+    role: "Office Technical Assistant",
+    photo: "/team/mark-d-wreh.png",
+    photoObjectPosition: "object-top",
+    bio: "Supports office systems, devices, and day-to-day technical tasks for staff and programs.",
   },
   {
-    name: "Rose Howard",
-    role: "Programs Coordinator",
-    bio: "Supports enrollment, scheduling, and participant success across training cohorts.",
+    name: "Francess J. Diah",
+    role: "Office Assistant",
+    photo: "/team/francess-j-diah.png",
+    photoObjectPosition: "object-top",
+    bio: "Supports front-desk coordination, office correspondence, and day-to-day administrative tasks for staff and visitors.",
   },
 ];
 
@@ -57,11 +67,10 @@ function initialsFromName(name) {
 function TeamAvatar({ name }) {
   const initials = initialsFromName(name);
   return (
-    <div
-      className="flex aspect-square w-full items-center justify-center rounded-full bg-neutral-100 text-xl font-bold tracking-tight text-[#1a1a4b] ring-2 ring-neutral-200 min-[480px]:text-3xl sm:text-4xl"
-      aria-hidden
-    >
-      {initials}
+    <div className="aspect-square w-full rounded-full bg-neutral-200 p-[3px]" aria-hidden>
+      <div className="flex h-full w-full items-center justify-center rounded-full bg-neutral-100 text-xl font-bold tracking-tight text-[#1a1a4b] min-[480px]:text-3xl sm:text-4xl">
+        {initials}
+      </div>
     </div>
   );
 }
@@ -70,14 +79,19 @@ function TeamPhoto({ member }) {
   const wrap = (node) => <div className={teamMediaWrapClass}>{node}</div>;
 
   if (member.photo) {
+    const objectPos = member.photoObjectPosition ?? "object-center";
     return wrap(
-      <img
-        src={member.photo}
-        alt={member.name}
-        className="aspect-square w-full rounded-full bg-white object-cover object-center ring-2 ring-neutral-200"
-        loading="lazy"
-        decoding="async"
-      />,
+      <div className="aspect-square w-full rounded-full bg-neutral-200 p-[3px]">
+        <div className="h-full w-full overflow-hidden rounded-full bg-white">
+          <img
+            src={member.photo}
+            alt={member.name}
+            className={`block h-full w-full object-cover ${objectPos}`}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>,
     );
   }
   return wrap(<TeamAvatar name={member.name} />);
@@ -146,12 +160,11 @@ export function AboutPage() {
           Our team
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-          Meet the people behind Liberia Libra. Add headshots and optional LinkedIn QR
-          images under{" "}
+          Meet the people behind Liberia Libra. Team photos live under{" "}
           <code className="break-all rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800 sm:break-normal sm:text-sm">
             public/team/
-          </code>{" "}
-          using the <code className="rounded bg-neutral-200 px-1 py-0.5 text-[0.7rem]">linkedinQr</code> field on each member.
+          </code>
+          .
         </p>
 
         <ul className="mt-8 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:gap-8 xl:grid-cols-4">
@@ -167,20 +180,9 @@ export function AboutPage() {
               <p className="mt-1 text-xs font-medium leading-snug text-[var(--color-ll-accent)] sm:text-sm">
                 {member.role}
               </p>
-              {"linkedinQr" in member && member.linkedinQr ? (
-                <div className="mt-2 flex-1">
-                  <img
-                    src={member.linkedinQr}
-                    alt={`${member.name} — LinkedIn`}
-                    className="mx-auto mt-1 w-full max-w-[min(100%,14rem)] rounded-lg border border-neutral-200 bg-white object-contain p-2 shadow-sm min-[480px]:mx-0 min-[480px]:max-w-[220px]"
-                    loading="lazy"
-                  />
-                </div>
-              ) : (
-                <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
-                  {member.bio}
-                </p>
-              )}
+              <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
+                {member.bio}
+              </p>
             </li>
           ))}
         </ul>

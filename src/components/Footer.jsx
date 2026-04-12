@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 export function Footer() {
   const year = new Date().getFullYear();
   return (
@@ -95,6 +99,13 @@ export function Footer() {
                 +231 777 000 000 031
               </span>
             </li>
+            <li>
+              <strong className="text-neutral-900">Address</strong>
+              <br />
+              <span className="text-neutral-600">
+                Caldwell Road, Monrovia Liberia      
+              </span>
+            </li>
           </ul>
         </div>
         <div>
@@ -115,10 +126,37 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-neutral-200 bg-[var(--color-ll-footer)] px-3 py-3 sm:px-6 sm:py-4">
-        <p className="mx-auto max-w-[1120px] px-1 text-center text-xs leading-snug text-white sm:text-sm">
-          © {year} Liberia Libra Incorporated. All rights reserved.
-        </p>
+        <div className="mx-auto flex max-w-[1120px] items-center gap-3 sm:gap-4">
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="inline-flex shrink-0 min-h-9 items-center gap-1.5 rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-[0.65rem] font-semibold text-white backdrop-blur-sm transition hover:border-white/55 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-10 sm:gap-2 sm:px-4 sm:py-2 sm:text-xs"
+            aria-label="Back to top of page"
+          >
+            <ArrowUpIcon className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden />
+            Back to top
+          </button>
+          <p className="min-w-0 flex-1 text-center text-xs leading-snug text-white sm:text-sm">
+            © {year} Liberia Libra Incorporated. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
+  );
+}
+
+function ArrowUpIcon({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
   );
 }

@@ -33,17 +33,17 @@ export function ContactPage() {
               <strong className="text-neutral-900">Email</strong>
               <br />
               <a
-                href="mailto:info@example.com"
+                href="mailto:liberialibrainc@gmail.com"
                 className="break-all text-[var(--color-ll-accent)] hover:underline sm:break-normal"
               >
-                info@example.com
+                liberialibrainc@gmail.com
               </a>
             </li>
             <li>
               <strong className="text-neutral-900">Hours</strong>
               <br />
               <span className="text-neutral-600">
-                Mon–Fri 8:00–17:00 · Sat 9:00–13:00
+                Mon–Fri 8:00–17:00 · Sat 9:00–14:00
               </span>
             </li>
           </ul>
