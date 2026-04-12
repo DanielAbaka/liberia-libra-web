@@ -50,16 +50,25 @@ jobs:
           fi
 
       # GitHub Pages URLs are lowercase; mixed-case repo names break script/CSS loads → blank page
-      # Vite bakes VITE_* into the JS at build time — add these as repo Secrets (Settings → Secrets).
+      # Vite bakes VITE_* at build time. Write .env here (same as local) + export so the Node/Vite process always sees the vars.
       - name: Build
         shell: bash
         env:
           REPO_RAW: ${{ github.event.repository.name }}
-          VITE_GOOGLE_SHEETS_WEBAPP_URL: ${{ secrets.VITE_GOOGLE_SHEETS_WEBAPP_URL }}
-          VITE_CONTACT_FORM_SECRET: ${{ secrets.VITE_CONTACT_FORM_SECRET }}
+          SHEETS: ${{ secrets.VITE_GOOGLE_SHEETS_WEBAPP_URL }}
+          FORM_SECRET: ${{ secrets.VITE_CONTACT_FORM_SECRET }}
         run: |
+          set -euo pipefail
+          printf 'VITE_GOOGLE_SHEETS_WEBAPP_URL=%s\n' "$SHEETS" > .env
+          printf 'VITE_CONTACT_FORM_SECRET=%s\n' "${FORM_SECRET:-}" >> .env
+          export VITE_GOOGLE_SHEETS_WEBAPP_URL="$SHEETS"
+          export VITE_CONTACT_FORM_SECRET="${FORM_SECRET:-}"
           export VITE_BASE_PATH="/${REPO_RAW,,}/"
           npm run build
+          if ! grep -Rql 'script\.google\.com' dist/assets/; then
+            echo "::error::Built assets do not contain script.google.com — the Sheets URL was not embedded. Check secrets and Vite env loading."
+            exit 1
+          fi
 
       - name: SPA fallback (refresh deep links on GitHub Pages)
         run: cp dist/index.html dist/404.html
