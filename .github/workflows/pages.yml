@@ -34,10 +34,13 @@ jobs:
       - run: npm ci
 
       # GitHub Pages URLs are lowercase; mixed-case repo names break script/CSS loads → blank page
+      # Vite bakes VITE_* into the JS at build time — add these as repo Secrets (Settings → Secrets).
       - name: Build
         shell: bash
         env:
           REPO_RAW: ${{ github.event.repository.name }}
+          VITE_GOOGLE_SHEETS_WEBAPP_URL: ${{ secrets.VITE_GOOGLE_SHEETS_WEBAPP_URL }}
+          VITE_CONTACT_FORM_SECRET: ${{ secrets.VITE_CONTACT_FORM_SECRET }}
         run: |
           export VITE_BASE_PATH="/${REPO_RAW,,}/"
           npm run build
