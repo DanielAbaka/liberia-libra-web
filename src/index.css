@@ -9,6 +9,7 @@
   --color-ll-footer: #1a1a4b;
   --color-ll-accent: #e53935;
   --color-ll-accent-dim: #9ccc65;
+  --color-ll-calendar-active: #15803d;
   --color-ll-muted: #c5c8e8;
   --color-ll-page: #fafafc;
   --color-ll-page-text: #14141f;
@@ -44,5 +45,29 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes calendar-today-cycle {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--color-ll-calendar-active);
+  }
+  50% {
+    box-shadow: 0 0 0 2px #fff,
+      0 0 0 6px color-mix(in srgb, var(--color-ll-calendar-active) 32%, transparent);
+  }
+}
+
+.calendar-cell-today {
+  position: relative;
+  z-index: 1;
+  animation: calendar-today-cycle 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-cell-today {
+    animation: none;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-ll-calendar-active);
   }
 }

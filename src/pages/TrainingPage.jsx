@@ -12,8 +12,10 @@ import {
   TRAINING_PROGRAMS,
   VOCATIONAL_TRACK_COURSES,
   flattenTrainingDates,
+  trainingSessionPatternsByTrack,
 } from "../data/trainingPrograms.js";
 import { publicAsset } from "../lib/publicAsset.js";
+import { liberiaPublicHolidaysInMonth } from "../lib/liberiaPublicHolidays.js";
 
 const initialForm = {
   fullName: "",
@@ -48,7 +50,7 @@ function pad2(n) {
   return String(n).padStart(2, "0");
 }
 
-function MonthCalendar({ year, month, highlightSet }) {
+function MonthCalendar({ year, month, milestoneSet, holidayMap }) {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const startPad = first.getDay();
@@ -57,6 +59,9 @@ function MonthCalendar({ year, month, highlightSet }) {
   for (let i = 0; i < startPad; i++) cells.push(null);
   for (let d = 1; d <= totalDays; d++) cells.push(d);
   const label = first.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
 
   return (
     <div className="rounded-xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
@@ -72,17 +77,62 @@ function MonthCalendar({ year, month, highlightSet }) {
             return <div key={`e-${i}`} className="min-h-8 sm:min-h-9" />;
           }
           const key = `${year}-${pad2(month + 1)}-${pad2(day)}`;
-          const hit = highlightSet.has(key);
+          const isToday = key === todayKey;
+          const holidayLabel = holidayMap.get(key);
+          const isMilestone = milestoneSet.has(key);
+          const dow = new Date(year, month, day).getDay();
+          const isWeekend = dow === 0 || dow === 6;
+          let session = null;
+          if (!holidayLabel && !isWeekend) {
+            if (dow === 2 || dow === 4) session = "tuth";
+            else if (dow === 1 || dow === 3 || dow === 5) session = "mwf";
+          }
+
+          let cellClass =
+            "relative flex min-h-8 flex-col items-center justify-center gap-0 rounded-md text-xs sm:min-h-9 sm:text-sm ";
+          if (holidayLabel) {
+            cellClass +=
+              "border border-neutral-300 bg-neutral-200 font-medium text-neutral-700";
+          } else if (isMilestone && session) {
+            cellClass +=
+              session === "tuth"
+                ? "bg-sky-600 font-semibold text-white ring-2 ring-amber-400 ring-offset-1"
+                : "bg-[var(--color-ll-accent)] font-semibold text-white ring-2 ring-amber-400 ring-offset-1";
+          } else if (isMilestone) {
+            cellClass += "bg-amber-500 font-semibold text-white";
+          } else if (session === "tuth") {
+            cellClass += "bg-sky-600 font-semibold text-white";
+          } else if (session === "mwf") {
+            cellClass += "bg-[var(--color-ll-accent)] font-semibold text-white";
+          } else {
+            cellClass += "text-neutral-800";
+          }
+
+          if (holidayLabel && isMilestone) {
+            cellClass += " ring-2 ring-amber-500 ring-offset-1";
+          }
+
+          if (isToday) {
+            cellClass += " calendar-cell-today pb-1 pt-0.5";
+          }
+
+          const tipParts = [];
+          if (isToday) tipParts.push("Active day (today)");
+          if (holidayLabel) tipParts.push(`${holidayLabel} (Liberia public holiday)`);
+
           return (
             <div
               key={key}
-              className={`flex min-h-8 items-center justify-center rounded-md text-xs sm:min-h-9 sm:text-sm ${
-                hit
-                  ? "bg-[var(--color-ll-accent)] font-semibold text-white"
-                  : "text-neutral-800"
-              }`}
+              className={cellClass}
+              aria-current={isToday ? "date" : undefined}
+              title={tipParts.length ? tipParts.join(" · ") : undefined}
             >
-              {day}
+              <span className="leading-none">{day}</span>
+              {isToday ? (
+                <span className="mt-0.5 rounded-full bg-[var(--color-ll-calendar-active)] px-1.5 py-px text-[0.5rem] font-bold uppercase leading-none tracking-wide text-white sm:text-[0.55rem]">
+                  Active
+                </span>
+              ) : null}
             </div>
           );
         })}
@@ -148,18 +198,26 @@ export function TrainingPage() {
 
   const allFlatDates = useMemo(() => flattenTrainingDates(TRAINING_PROGRAMS), []);
 
-  const highlightSet = useMemo(() => {
+  const milestoneDateSet = useMemo(() => {
     const s = new Set();
-    for (const row of allFlatDates) {
-      s.add(row.date);
-    }
+    for (const row of allFlatDates) s.add(row.date);
     return s;
   }, [allFlatDates]);
+
+  const holidayMapForMonth = useMemo(
+    () => liberiaPublicHolidaysInMonth(calYear, calMonth),
+    [calYear, calMonth]
+  );
 
   const upcomingList = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
     return allFlatDates.filter((r) => r.date >= today).slice(0, 12);
   }, [allFlatDates]);
+
+  const sessionPatternsByTrack = useMemo(
+    () => trainingSessionPatternsByTrack(TRAINING_PROGRAMS),
+    []
+  );
 
   const modalOpen = enrollOpen || detailsProgram != null;
 
@@ -377,8 +435,22 @@ export function TrainingPage() {
             Training calendar
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-neutral-600">
-            Month view highlights any day with a scheduled milestone across tracks.
-            Use the arrows to browse months.
+            <span className="inline-block h-2 w-2 rounded-sm bg-[var(--color-ll-accent)] align-middle" />{" "}
+            Mon / Wed / Fri workshops,{" "}
+            <span className="inline-block h-2 w-2 rounded-sm bg-sky-600 align-middle" />{" "}
+            Tue / Thu workshops (no session colors on Liberia public holidays),{" "}
+            <span className="inline-block h-2 w-2 rounded-sm bg-neutral-300 align-middle" />{" "}
+            public holiday,{" "}
+            <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle" />{" "}
+            milestone,{" "}
+            <span
+              className="inline-block rounded-full bg-[var(--color-ll-calendar-active)] px-1.5 py-0.5 align-middle text-[0.55rem] font-bold uppercase leading-none text-white"
+              aria-hidden
+            >
+              Active
+            </span>{" "}
+            active day (green label and pulsing ring). Workshop details by track are on the
+            right.
           </p>
           <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-start">
             <div className="w-full max-w-md shrink-0">
@@ -398,33 +470,68 @@ export function TrainingPage() {
                   Next →
                 </button>
               </div>
-              <MonthCalendar year={calYear} month={calMonth} highlightSet={highlightSet} />
+              <MonthCalendar
+                year={calYear}
+                month={calMonth}
+                milestoneSet={milestoneDateSet}
+                holidayMap={holidayMapForMonth}
+              />
             </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-sm font-semibold text-neutral-900">Upcoming milestones</h3>
-              <ul className="mt-3 divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
-                {upcomingList.length === 0 ? (
-                  <li className="p-4 text-sm text-neutral-500">No upcoming dates on file.</li>
-                ) : (
-                  upcomingList.map((row) => (
-                    <li
-                      key={`${row.programId}-${row.date}-${row.label}`}
-                      className="flex flex-col gap-0.5 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-neutral-900">{row.label}</p>
-                        <p className="text-xs text-neutral-600">{row.programTitle}</p>
-                      </div>
-                      <time
-                        dateTime={row.date}
-                        className="shrink-0 text-sm font-semibold text-[var(--color-ll-accent)]"
-                      >
-                        {formatLongDate(row.date)}
-                      </time>
+            <div className="min-w-0 flex-1 space-y-8">
+              <div>
+                <h3 className="text-sm font-semibold text-neutral-900">Upcoming milestones</h3>
+                <ul className="mt-3 divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
+                  {upcomingList.length === 0 ? (
+                    <li className="p-4 text-sm text-neutral-500">
+                      No dated milestones on file yet. See workshop days by track below.
                     </li>
-                  ))
-                )}
-              </ul>
+                  ) : (
+                    upcomingList.map((row) => (
+                      <li
+                        key={`${row.programId}-${row.date}-${row.label}`}
+                        className="flex flex-col gap-0.5 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
+                      >
+                        <div>
+                          <p className="text-sm font-medium text-neutral-900">{row.label}</p>
+                          <p className="text-xs text-neutral-600">{row.programTitle}</p>
+                        </div>
+                        <time
+                          dateTime={row.date}
+                          className="shrink-0 text-sm font-semibold text-[var(--color-ll-accent)]"
+                        >
+                          {formatLongDate(row.date)}
+                        </time>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-neutral-900">Workshop days by track</h3>
+                <p className="mt-1 text-xs text-neutral-500">
+                  Track label, program length, and usual weekly workshop days.
+                </p>
+                <ul className="mt-3 divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
+                  {sessionPatternsByTrack.map((row) => (
+                    <li key={row.programId} className="p-3 sm:p-4">
+                      <p className="text-sm font-semibold text-[#1a1a4b]">{row.programTitle}</p>
+                      <p className="mt-1 text-xs font-medium text-neutral-700">{row.headline}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-neutral-700">
+                        {splitScheduleForBoldSegments(row.workshopLine).map((seg, j) =>
+                          seg.bold ? (
+                            <strong key={j} className="font-semibold text-neutral-900">
+                              {seg.text}
+                            </strong>
+                          ) : (
+                            <span key={j}>{seg.text}</span>
+                          )
+                        )}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>

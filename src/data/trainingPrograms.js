@@ -12,7 +12,7 @@
  * @property {string} [schedule] Session-timing copy; shown under Duration and Schedule (and PDF) when no durationBlock.
  * @property {string} cost
  * @property {TrainingKeyDate[]} keyDates
- * @property {{ headline: string, summary: string }} [durationBlock] When set, Duration and Schedule tab shows headline + summary instead of dated milestones.
+ * @property {{ headline: string, summary: string, calendarWeekdays?: number[] }} [durationBlock] When set, Duration and Schedule tab shows headline + summary instead of dated milestones. `calendarWeekdays` uses `Date.getDay()` (0 Sun … 6 Sat) for month-grid highlights.
  */
 
 /** @type {string[]} */
@@ -114,6 +114,7 @@ First Installment Payment: 50% of course fees to start`,
       headline: "24 Weeks/52 Training Sessions",
       summary:
         "Intensive workshop blocks on Monday, Wednesday, and Friday with afternoon sessions; mandatory safety briefings before tool use. Calendar aligns with tool and materials readiness—details at enrollment.",
+      calendarWeekdays: [1, 3, 5],
     },
   },
   {
@@ -233,4 +234,39 @@ export function flattenTrainingDates(programs) {
   }
   rows.sort((a, b) => a.date.localeCompare(b.date) || a.programTitle.localeCompare(b.programTitle));
   return rows;
+}
+
+/**
+ * Workshop-day summary per track (from `durationBlock`) for calendar sidebar / overview.
+ * @param {TrainingProgram[]} programs
+ * @returns {{ programId: string, programTitle: string, headline: string, workshopLine: string }[]}
+ */
+export function trainingSessionPatternsByTrack(programs) {
+  const out = [];
+  for (const p of programs) {
+    if (!p.durationBlock) continue;
+    const workshopLine = p.durationBlock.summary.split(";")[0].trim();
+    out.push({
+      programId: p.id,
+      programTitle: p.title,
+      headline: p.durationBlock.headline,
+      workshopLine,
+    });
+  }
+  return out;
+}
+
+/**
+ * Union of weekday indices (0 Sun … 6 Sat) when any track runs workshops.
+ * @param {TrainingProgram[]} programs
+ * @returns {Set<number>}
+ */
+export function unionTrainingCalendarWeekdays(programs) {
+  const u = new Set();
+  for (const p of programs) {
+    const days = p.durationBlock?.calendarWeekdays;
+    if (!days?.length) continue;
+    for (const d of days) u.add(d);
+  }
+  return u;
 }
