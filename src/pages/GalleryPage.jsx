@@ -72,15 +72,7 @@ export function GalleryPage() {
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
           Photos from Liberia Libra training across ICT, vocational, and professional
-          programs. Drop new images in{" "}
-          <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800">
-            public/gallery/
-          </code>{" "}
-          and add them to{" "}
-          <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800">
-            src/data/trainingGallery.js
-          </code>
-          .
+          programs.
         </p>
 
         <nav

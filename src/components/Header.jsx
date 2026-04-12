@@ -7,6 +7,7 @@ const nav = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/training", label: "Training" },
+  { to: "/scholarship", label: "Scholarship" },
   { to: "/gallery", label: "Gallery" },
   { to: "/portfolio", label: "Portfolio" },
   { to: "/blog", label: "Blog" },

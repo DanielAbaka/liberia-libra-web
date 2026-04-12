@@ -102,8 +102,8 @@ export function ServicesPage() {
           Services
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-          Service overview grid. Expand each section with accordions, pricing
-          tables, FAQs, and CTAs as needed.
+          Explore our consulting and training offerings—each card summarizes what we
+          deliver and the activities we can take on with your team.
         </p>
         <ul className="mt-8 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 min-[480px]:gap-6 sm:mt-12">
           {services.map((s) => (

@@ -1,11 +1,24 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
+const FILTERS = ["All", "ICT", "Media", "DTP"];
+
+const PORTFOLIO_ITEMS = [
+  { id: "1", cat: "ICT", title: "Sample ICT project" },
+  { id: "2", cat: "Media", title: "Sample media project" },
+  { id: "3", cat: "DTP", title: "Sample DTP project" },
+];
+
 export function PortfolioPage() {
-  const items = [
-    { id: "1", cat: "ICT", title: "Sample ICT project" },
-    { id: "2", cat: "Media", title: "Sample media project" },
-    { id: "3", cat: "DTP", title: "Sample DTP project" },
-  ];
+  const [filter, setFilter] = useState("All");
+
+  const visible = useMemo(
+    () =>
+      filter === "All"
+        ? PORTFOLIO_ITEMS
+        : PORTFOLIO_ITEMS.filter((p) => p.cat === filter),
+    [filter]
+  );
 
   return (
     <div className="min-h-[50vh] overflow-x-hidden px-3 py-10 sm:px-6 sm:py-16">
@@ -14,25 +27,37 @@ export function PortfolioPage() {
           Portfolio
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-          Add filter chips, image/video thumbnails, and project detail modals or
-          routes. Student activity updates are now published under the dedicated{" "}
+          A curated view of Liberia Libra work across ICT, media, and desktop
+          publishing. Use the category chips to scan what we do, preview each
+          project below, and open <span className="font-medium text-neutral-800">View details</span>{" "}
+          when you want to learn more. Training photos, student stories, and
+          activity updates live on our{" "}
           <Link to="/blog" className="font-semibold text-[var(--color-ll-accent)] hover:underline">
             Blog
-          </Link>{" "}
-          page.
+          </Link>
+          .
         </p>
-        <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
-          {["All", "ICT", "Media", "DTP"].map((f) => (
-            <span
+        <nav
+          className="mt-6 flex flex-wrap gap-2 sm:mt-8"
+          aria-label="Portfolio categories"
+        >
+          {FILTERS.map((f) => (
+            <button
               key={f}
-              className="rounded-full border border-neutral-300 bg-white px-2.5 py-1 text-[0.65rem] font-semibold text-neutral-700 min-[400px]:px-3 min-[400px]:text-xs"
+              type="button"
+              onClick={() => setFilter(f)}
+              className={`min-h-9 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 sm:text-sm ${
+                filter === f
+                  ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white"
+                  : "border-neutral-300 bg-white text-neutral-800 hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)]"
+              }`}
             >
               {f}
-            </span>
+            </button>
           ))}
-        </div>
+        </nav>
         <ul className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-5 sm:mt-8 lg:grid-cols-3">
-          {items.map((p) => (
+          {visible.map((p) => (
             <li
               key={p.id}
               className="min-w-0 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm"

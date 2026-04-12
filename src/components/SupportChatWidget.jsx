@@ -21,6 +21,13 @@ const FAQ = [
     link: { to: "/training", label: "Open training" },
   },
   {
+    id: "scholarship",
+    prompt: "Scholarships?",
+    reply:
+      "See donor partners and submit a scholarship application on the Scholarship page. We follow up after review.",
+    link: { to: "/scholarship", label: "Scholarships" },
+  },
+  {
     id: "quote",
     prompt: "Request a quote?",
     reply:
@@ -202,6 +209,13 @@ export function SupportChatWidget() {
                   className="rounded-full bg-[#1a1a4b] px-3 py-1.5 text-xs font-semibold text-white no-underline hover:brightness-110"
                 >
                   Training
+                </Link>
+                <Link
+                  to="/scholarship"
+                  onClick={close}
+                  className="rounded-full border border-[#1a1a4b] px-3 py-1.5 text-xs font-semibold text-[#1a1a4b] no-underline hover:bg-neutral-50"
+                >
+                  Scholarship
                 </Link>
                 <Link
                   to="/gallery"

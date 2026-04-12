@@ -1,7 +1,3 @@
-/**
- * Training gallery images live under `public/` (e.g. `public/gallery/photo.jpg` → `/gallery/photo.jpg`).
- * Add entries here as you publish new photos.
- */
 export const GALLERY_CATEGORIES = ["All", "ICT", "Vocational", "Professional"];
 
 export const TRAINING_GALLERY_ITEMS = [

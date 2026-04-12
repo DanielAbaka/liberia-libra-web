@@ -8,6 +8,7 @@ import { PortfolioPage } from "./pages/PortfolioPage.jsx";
 import { BlogPage } from "./pages/BlogPage.jsx";
 import { GalleryPage } from "./pages/GalleryPage.jsx";
 import { ContactPage } from "./pages/ContactPage.jsx";
+import { ScholarshipPage } from "./pages/ScholarshipPage.jsx";
 import { NotFoundPage } from "./pages/NotFoundPage.jsx";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="training" element={<TrainingPage />} />
+        <Route path="scholarship" element={<ScholarshipPage />} />
         <Route path="portfolio" element={<PortfolioPage />} />
         <Route path="gallery" element={<GalleryPage />} />
         <Route path="blog" element={<BlogPage />} />

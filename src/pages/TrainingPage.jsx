@@ -226,8 +226,7 @@ export function TrainingPage() {
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
           Each card is a full training track. Filter or search, open a track for
           curriculum, schedule, and cost, review key dates on the calendar, and
-          download the brochure. Wire enrollment to your API or form provider when
-          ready.
+          download the brochure.
         </p>
 
         <div className="mt-6 flex flex-col gap-4 min-[480px]:flex-row min-[480px]:items-end min-[480px]:justify-between sm:mt-8">

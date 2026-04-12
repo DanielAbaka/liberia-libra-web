@@ -160,11 +160,7 @@ export function AboutPage() {
           Our team
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-          Meet the people behind Liberia Libra. Team photos live under{" "}
-          <code className="break-all rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800 sm:break-normal sm:text-sm">
-            public/team/
-          </code>
-          .
+          Meet the people behind Liberia Libra.
         </p>
 
         <ul className="mt-8 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:gap-8 xl:grid-cols-4">
