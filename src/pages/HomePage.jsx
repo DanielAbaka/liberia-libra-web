@@ -24,25 +24,59 @@ export function HomePage() {
 
       <section className="border-t border-neutral-200/80 bg-[var(--color-ll-page)] px-3 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-[1120px]">
-          <div className="grid gap-8 min-[480px]:gap-10 lg:grid-cols-2 lg:items-center">
-            <div className="min-w-0">
-              <h2 className="font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-2xl">
+          <div className="grid gap-6 min-[480px]:gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-8">
+            <div className="flex min-h-0 min-w-0 flex-col justify-center overflow-hidden rounded-2xl border border-neutral-200/90 bg-gradient-to-br from-white via-white to-neutral-50/90 p-6 shadow-card sm:p-8">
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-[#5a7a2e] sm:text-xs">
+                About
+              </p>
+              <h2 className="mt-2 font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-2xl sm:text-3xl">
                 About Liberia Libra
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-600 sm:mt-4 sm:text-base">
-                Liberia Libra Incorporated is an innovation driven African
-                organization dedicated to digital empowerment, vocational training,
-                and technology solutions that help individuals and businesses thrive.
+              <span
+                className="mt-4 inline-block h-1 w-14 rounded-full bg-[var(--color-ll-accent)]"
+                aria-hidden
+              />
+              <p className="mt-5 text-sm leading-relaxed text-neutral-600 sm:text-base">
+                Liberia Libra Incorporated is an innovation driven African organization
+                dedicated to digital empowerment, vocational training, and technology
+                solutions that help individuals and businesses thrive.
               </p>
-              <Link to="/about" className={`${btnPrimary} mt-5 sm:mt-6`}>
-                About us
-              </Link>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link to="/about" className={btnPrimary}>
+                  About us
+                </Link>
+                <Link
+                  to="/training"
+                  className="inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 bg-white px-4 py-2 text-xs font-semibold text-[#1a1a4b] no-underline transition hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)] active:scale-[0.98] min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6"
+                >
+                  View training
+                </Link>
+              </div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-card sm:p-6">
-              <p className="text-xs leading-relaxed text-neutral-600 sm:text-sm">
+            <div className="group flex min-h-0 min-w-0 flex-col rounded-2xl border border-neutral-200/90 bg-white p-6 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-[var(--color-ll-accent)]/30 hover:shadow-lg sm:p-8">
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-ll-accent)]/[0.12] to-[var(--color-ll-accent-dim)]/20 text-[var(--color-ll-accent)] transition group-hover:from-[var(--color-ll-accent)]/15 group-hover:to-[var(--color-ll-accent-dim)]/25"
+                aria-hidden
+              >
+                <IconTraining className="h-6 w-6" />
+              </div>
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-lg font-bold leading-snug text-[#1a1a4b] sm:text-xl">
+                Free training programs
+              </h3>
+              <span
+                className="mt-2 inline-block h-1 w-11 rounded-full bg-[var(--color-ll-accent)]"
+                aria-hidden
+              />
+              <p className="mt-4 flex-1 text-sm leading-relaxed text-neutral-600">
                 We also offer free training programs that equip individuals with
                 essential technology skills, promoting continuous learning.
               </p>
+              <Link
+                to="/training"
+                className="mt-6 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[var(--color-ll-accent)] no-underline transition hover:gap-2 hover:underline"
+              >
+                Explore programs <span aria-hidden>→</span>
+              </Link>
             </div>
           </div>
         </div>

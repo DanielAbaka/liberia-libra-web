@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 /** Optional `photo` / `photoObjectPosition` (Tailwind classes, e.g. `object-[50%_18%]`) */
 const TEAM = [
   {
@@ -75,6 +77,99 @@ function TeamAvatar({ name }) {
   );
 }
 
+function PillarIconGoal({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2M12 19v2M3 12h2M19 12h2" />
+    </svg>
+  );
+}
+
+function PillarIconMission({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
+
+function PillarIconVision({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function OverviewOrgIcon({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M6 22V4a2 2 0 012-2h8a2 2 0 012 2v18" />
+      <path d="M6 12H4a2 2 0 00-2 2v6a2 2 0 002 2h2" />
+      <path d="M18 9h2a2 2 0 012 2v9a2 2 0 01-2 2h-2" />
+      <path d="M10 6h4M10 10h4M10 14h4M10 18h4" />
+    </svg>
+  );
+}
+
+const ABOUT_PILLARS = [
+  {
+    title: "Our Goal",
+    text: "To drive innovation, boost capacity, and create lasting impact across Africa.",
+    Icon: PillarIconGoal,
+  },
+  {
+    title: "Our Mission",
+    text: "To empower individuals, institutions, and communities across Africa by providing high-quality ICT, vocational, and professional training, along with innovative digital solutions that promote growth, close the digital gap, and support sustainable development.",
+    Icon: PillarIconMission,
+  },
+  {
+    title: "Our Vision",
+    text: "To lead Africa's digital transformation by building a future where technology empowers every individual and organization to achieve their full potential.",
+    Icon: PillarIconVision,
+  },
+];
+
 function TeamPhoto({ member }) {
   const wrap = (node) => <div className={teamMediaWrapClass}>{node}</div>;
 
@@ -100,50 +195,89 @@ function TeamPhoto({ member }) {
 export function AboutPage() {
   return (
     <div className="min-h-[50vh] overflow-x-hidden px-3 py-10 sm:px-6 sm:py-16">
-      <div className="mx-auto max-w-3xl">
-        <p className="text-[0.65rem] font-bold uppercase tracking-wider text-[#5a7a2e] sm:text-xs">
-          About
-        </p>
-        <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
-          Company overview
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-neutral-600 sm:mt-4 sm:text-base">
-          Liberia Libra Incorporated is an innovation driven African organization
-          dedicated to digital empowerment, vocational training, and technology
-          solutions that help individuals and businesses thrive.
-          <br />
-          <br />
-          We also offer free training programs that equip individuals with essential
-          technology skills, promoting continuous learning.
-        </p>
-        <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-4">
-          {[
-            {
-              title: "Our Goal",
-              text: "To drive innovation, boost capacity, and create lasting impact across Africa.",
-            },
-            {
-              title: "Our Mission",
-              text: "To empower individuals, institutions, and communities across Africa by providing high-quality ICT, vocational, and professional training, along with innovative digital solutions that promote growth, close the digital gap, and support sustainable development.",
-            },
-            {
-              title: "Our Vision",
-              text: "To lead Africa's digital transformation by building a future where technology empowers every individual and organization to achieve their full potential.",
-            },
-          ].map((item) => (
+      <div className="mx-auto max-w-[1120px]">
+        <div className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-gradient-to-br from-white via-white to-neutral-50/90 p-6 shadow-card sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
             <div
-              key={item.title}
-              className="rounded-xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4"
+              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-ll-accent)]/[0.12] to-[var(--color-ll-accent-dim)]/20 text-[var(--color-ll-accent)] lg:h-16 lg:w-16"
+              aria-hidden
             >
-              <h2 className="text-sm font-semibold text-[var(--color-ll-accent)]">
-                {item.title}
-              </h2>
-              <p className="mt-2 text-xs leading-relaxed text-neutral-600 sm:text-sm">
-                {item.text}
-              </p>
+              <OverviewOrgIcon className="h-7 w-7 lg:h-8 lg:w-8" />
             </div>
-          ))}
+            <div className="min-w-0 flex-1">
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-[#5a7a2e] sm:text-xs">
+                About
+              </p>
+              <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
+                Company overview
+              </h1>
+              <span
+                className="mt-4 inline-block h-1 w-14 rounded-full bg-[var(--color-ll-accent)]"
+                aria-hidden
+              />
+              <p className="mt-5 text-sm leading-relaxed text-neutral-600 sm:text-base">
+                Liberia Libra Incorporated is an innovation driven African organization
+                dedicated to digital empowerment, vocational training, and technology
+                solutions that help individuals and businesses thrive.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-neutral-600 sm:text-base">
+                We also offer free training programs that equip individuals with essential
+                technology skills, promoting continuous learning.
+              </p>
+              <nav
+                className="mt-8 flex flex-wrap gap-3"
+                aria-label="Explore programs and contact"
+              >
+                <Link
+                  to="/training"
+                  className="inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--color-ll-accent)] px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/25 transition hover:brightness-110 sm:text-sm"
+                >
+                  View training
+                </Link>
+                <Link
+                  to="/scholarship"
+                  className="inline-flex min-h-10 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 py-2 text-xs font-semibold text-[#1a1a4b] transition hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)] sm:text-sm"
+                >
+                  Scholarships
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex min-h-10 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 py-2 text-xs font-semibold text-[#1a1a4b] transition hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)] sm:text-sm"
+                >
+                  Contact us
+                </Link>
+              </nav>
+            </div>
+          </div>
         </div>
+
+        <ul
+          className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-3 sm:gap-6"
+          aria-label="Goal, mission, and vision"
+        >
+          {ABOUT_PILLARS.map((item) => (
+            <li key={item.title} className="flex h-full min-h-0">
+              <div className="group flex h-full w-full flex-col rounded-2xl border border-neutral-200/90 bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-[var(--color-ll-accent)]/30 hover:shadow-lg sm:p-6">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-ll-accent)]/[0.12] to-[var(--color-ll-accent-dim)]/20 text-[var(--color-ll-accent)] transition group-hover:from-[var(--color-ll-accent)]/15 group-hover:to-[var(--color-ll-accent-dim)]/25"
+                  aria-hidden
+                >
+                  <item.Icon className="h-6 w-6" />
+                </div>
+                <h2 className="mt-4 font-[family-name:var(--font-display)] text-lg font-bold leading-snug text-[#1a1a4b] sm:text-xl">
+                  {item.title}
+                </h2>
+                <span
+                  className="mt-2 inline-block h-1 w-11 rounded-full bg-[var(--color-ll-accent)]"
+                  aria-hidden
+                />
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-neutral-600">
+                  {item.text}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <section

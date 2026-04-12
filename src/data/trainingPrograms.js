@@ -1,11 +1,13 @@
 /** @typedef {{ label: string, date: string }} TrainingKeyDate */
 
 /**
+ * @typedef {{ src: string, alt: string }} TrainingCoverImage
  * @typedef {Object} TrainingProgram
  * @property {string} id
  * @property {string} title
  * @property {string} category
  * @property {string} summary
+ * @property {TrainingCoverImage} coverImage
  * @property {string[]} curriculum
  * @property {string} schedule
  * @property {string} cost
@@ -25,6 +27,10 @@ export const TRAINING_PROGRAMS = [
     id: "ict-track",
     title: "ICT Track",
     category: "ICT Track",
+    coverImage: {
+      src: "gallery/ict-track-cover.png",
+      alt: "Students in a computer lab working at desktops with Liberia Libra on screen during ICT training",
+    },
     summary:
       "One track covering everyday digital productivity and a practical web presence—labs, guided projects, and cohort-based milestones.",
     curriculum: [
@@ -76,6 +82,10 @@ export const TRAINING_PROGRAMS = [
     id: "vocational-track",
     title: "Vocational Track",
     category: "Vocational Track",
+    coverImage: {
+      src: "gallery/cosmetology-training-01.png",
+      alt: "Cosmetology trainees practicing beauty skills during an outdoor vocational session",
+    },
     summary:
       "Hands-on trades training in the workshop: garment work from tools to small-batch output, plus supervised electrical fundamentals.",
     curriculum: [
@@ -104,6 +114,10 @@ export const TRAINING_PROGRAMS = [
     id: "professional-track",
     title: "Professional Track",
     category: "Professional Track",
+    coverImage: {
+      src: "gallery/professional-track-cover.png",
+      alt: "Team of Liberia Libra staff and partners posing in front of a branded banner at an outdoor event",
+    },
     summary:
       "Build supervisor confidence and delivery discipline in one track—people leadership plus practical project habits for non-specialists.",
     curriculum: [
@@ -193,8 +207,6 @@ export const PROFESSIONAL_TRACK_COURSES = (() => {
   }
   return out;
 })();
-
-export const TRAINING_BROCHURE_HREF = "/assets/libra-training-brochure.pdf";
 
 /**
  * @param {TrainingProgram[]} programs

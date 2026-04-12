@@ -4,12 +4,12 @@ import {
   ICT_TRACK_COURSES_BY_LEVEL,
   ICT_TRAINING_LEVEL_OPTIONS,
   PROFESSIONAL_TRACK_COURSES,
-  TRAINING_BROCHURE_HREF,
   TRAINING_CATEGORIES,
   TRAINING_PROGRAMS,
   VOCATIONAL_TRACK_COURSES,
   flattenTrainingDates,
 } from "../data/trainingPrograms.js";
+import { publicAsset } from "../lib/publicAsset.js";
 
 const initialForm = {
   fullName: "",
@@ -220,47 +220,64 @@ export function TrainingPage() {
   return (
     <div className="min-h-[50vh] overflow-x-hidden px-3 py-10 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-[1120px]">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
+        <p className="text-[0.65rem] font-bold uppercase tracking-wider text-[#5a7a2e] sm:text-xs">
+          Programs
+        </p>
+        <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
           Training programs
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+        <span
+          className="mt-4 inline-block h-1 w-14 rounded-full bg-[var(--color-ll-accent)]"
+          aria-hidden
+        />
+        <p className="mt-5 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
           Each card is a full training track. Filter or search, open a track for
           curriculum, schedule, and cost, review key dates on the calendar, and
           download the brochure.
         </p>
 
-        <div className="mt-6 flex flex-col gap-4 min-[480px]:flex-row min-[480px]:items-end min-[480px]:justify-between sm:mt-8">
-          <div className="min-w-0 flex-1">
-            <label htmlFor={searchId} className="sr-only">
-              Search tracks
-            </label>
-            <input
-              id={searchId}
-              type="search"
-              placeholder="Search tracks…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-[var(--color-ll-accent)] sm:text-sm"
-              autoComplete="off"
-            />
+        <div className="mt-8 rounded-2xl border border-neutral-200/90 bg-gradient-to-br from-white to-neutral-50/80 p-4 shadow-card sm:mt-10 sm:p-5">
+          <div className="flex flex-col gap-4 min-[480px]:flex-row min-[480px]:items-stretch min-[480px]:gap-4">
+            <div className="min-w-0 flex-1">
+              <label htmlFor={searchId} className="sr-only">
+                Search tracks
+              </label>
+              <input
+                id={searchId}
+                type="search"
+                placeholder="Search tracks…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full min-h-11 rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-base text-neutral-900 shadow-sm outline-none ring-[var(--color-ll-accent)]/0 transition placeholder:text-neutral-400 focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
+                autoComplete="off"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                const { downloadLiberiaLibraBrochurePdf } = await import(
+                  "../lib/generateLiberiaLibraBrochurePdf.js"
+                );
+                await downloadLiberiaLibraBrochurePdf();
+              }}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 text-sm font-semibold text-[#1a1a4b] shadow-sm transition hover:border-[var(--color-ll-accent)]/40 hover:text-[var(--color-ll-accent)]"
+            >
+              Download brochure (PDF)
+            </button>
           </div>
-          <a
-            href={TRAINING_BROCHURE_HREF}
-            download
-            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-neutral-300 bg-white px-4 text-sm font-semibold text-[#1a1a4b] hover:bg-neutral-50"
-          >
-            Download brochure (PDF)
-          </a>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <nav
+          className="mt-6 flex flex-wrap gap-2"
+          aria-label="Filter by track type"
+        >
           <button
             type="button"
             onClick={() => setCategory("all")}
-            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition min-[400px]:text-sm ${
+            className={`min-h-9 rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:px-4 sm:text-sm ${
               category === "all"
-                ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white"
-                : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400"
+                ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white shadow-md shadow-[var(--color-ll-accent)]/25"
+                : "border-neutral-300 bg-white text-neutral-800 hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)]"
             }`}
           >
             All
@@ -270,49 +287,72 @@ export function TrainingPage() {
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition min-[400px]:text-sm ${
+              className={`min-h-9 rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:px-4 sm:text-sm ${
                 category === c
-                  ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white"
-                  : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400"
+                  ? "border-[var(--color-ll-accent)] bg-[var(--color-ll-accent)] text-white shadow-md shadow-[var(--color-ll-accent)]/25"
+                  : "border-neutral-300 bg-white text-neutral-800 hover:border-[var(--color-ll-accent)] hover:text-[var(--color-ll-accent)]"
               }`}
             >
               {c}
             </button>
           ))}
-        </div>
+        </nav>
 
-        <p className="mt-4 text-xs text-neutral-500 sm:text-sm" aria-live="polite">
+        <p className="mt-4 text-xs font-medium text-neutral-500 sm:text-sm" aria-live="polite">
           Showing {filteredPrograms.length} of {TRAINING_PROGRAMS.length} tracks
         </p>
 
-        <ul className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 min-[480px]:gap-6 lg:grid-cols-3">
           {filteredPrograms.map((p) => (
-            <li
-              key={p.id}
-              className="flex min-w-0 flex-col rounded-xl border border-neutral-200 bg-white p-4 shadow-sm min-[480px]:p-5"
-            >
-              <h2 className="text-base font-semibold leading-snug text-neutral-900 sm:text-lg">
-                {p.title}
-              </h2>
-              <p className="mt-2 flex-1 text-xs leading-relaxed text-neutral-600 sm:text-sm">
-                {p.summary}
-              </p>
-              <div className="mt-4 flex flex-col gap-2 min-[400px]:flex-row min-[400px]:flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => openDetails(p)}
-                  className="inline-flex min-h-10 items-center justify-center rounded-lg border border-neutral-300 bg-neutral-50 px-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-100"
-                >
-                  View details
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openEnroll(p.title, p.id)}
-                  className="inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] hover:underline min-[400px]:px-2"
-                >
-                  Register interest →
-                </button>
-              </div>
+            <li key={p.id} className="flex min-h-0 min-w-0">
+              <article className="group flex min-h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-[var(--color-ll-accent)]/25 hover:shadow-lg">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-200">
+                  <img
+                    src={publicAsset(p.coverImage.src)}
+                    alt={p.coverImage.alt}
+                    width={640}
+                    height={400}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent"
+                    aria-hidden
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-4 min-[480px]:p-5">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-wider text-[#5a7a2e]">
+                    {p.category}
+                  </p>
+                  <h2 className="mt-1 font-[family-name:var(--font-display)] text-lg font-bold leading-snug text-[#1a1a4b] sm:text-xl">
+                    {p.title}
+                  </h2>
+                  <span
+                    className="mt-2 inline-block h-1 w-10 rounded-full bg-[var(--color-ll-accent)]"
+                    aria-hidden
+                  />
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-neutral-600">
+                    {p.summary}
+                  </p>
+                  <div className="mt-5 flex flex-col gap-2 min-[400px]:flex-row min-[400px]:flex-wrap min-[400px]:items-center">
+                    <button
+                      type="button"
+                      onClick={() => openDetails(p)}
+                      className="inline-flex min-h-10 items-center justify-center rounded-full border border-neutral-200 bg-white px-4 text-sm font-semibold text-[#1a1a4b] shadow-sm transition hover:border-[var(--color-ll-accent)]/40 hover:bg-neutral-50"
+                    >
+                      View details
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openEnroll(p.title, p.id)}
+                      className="inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[var(--color-ll-accent)] transition hover:gap-2 hover:underline min-[400px]:px-2"
+                    >
+                      Register interest <span aria-hidden>→</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
             </li>
           ))}
         </ul>
@@ -386,13 +426,6 @@ export function TrainingPage() {
           </div>
         </section>
 
-        <p className="mt-8 text-xs leading-relaxed text-neutral-500 sm:text-sm">
-          Place your PDF at{" "}
-          <code className="break-all rounded bg-neutral-200 px-1.5 py-0.5 text-[0.7rem] text-neutral-800">
-            public/assets/libra-training-brochure.pdf
-          </code>{" "}
-          for the download button to work in production builds.
-        </p>
       </div>
 
       {detailsProgram

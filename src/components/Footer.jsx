@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { COMPANY_CONTACT } from "../data/companyContact.js";
 import { publicAsset } from "../lib/publicAsset.js";
 
 function scrollToTop() {
@@ -16,7 +17,7 @@ export function Footer() {
             className="inline-block focus-visible:rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)]"
           >
             <img
-              src={publicAsset("libra-logo.png")}
+              src={publicAsset(COMPANY_CONTACT.logoFile)}
               alt="Liberia Libra Incorporated"
               className="h-[5rem] w-auto max-w-[min(100%,340px)] object-contain object-left min-[400px]:h-[5.75rem] sm:h-28 sm:max-w-[min(100%,380px)]"
               width={380}
@@ -98,10 +99,10 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="mailto:liberialibrainc@gmail.com"
+                href={`mailto:${COMPANY_CONTACT.email}`}
                 className="text-neutral-700 hover:text-[var(--color-ll-accent)]"
               >
-                liberialibrainc@gmail.com
+                {COMPANY_CONTACT.email}
               </a>
             </li>
             <li>
@@ -115,7 +116,7 @@ export function Footer() {
               <strong className="text-neutral-900">Address</strong>
               <br />
               <span className="text-neutral-600">
-                Caldwell Road, Monrovia Liberia      
+                {COMPANY_CONTACT.addressLine1} {COMPANY_CONTACT.addressLine2}
               </span>
             </li>
           </ul>
