@@ -5,3 +5,4 @@ dist
 .env
 .env.local
 public/contact-sheet-config.json
+public/sheets-config.js

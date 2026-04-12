@@ -65,10 +65,10 @@ jobs:
           export VITE_GOOGLE_SHEETS_WEBAPP_URL="$SHEETS"
           export VITE_CONTACT_FORM_SECRET="${FORM_SECRET:-}"
           export VITE_BASE_PATH="/${REPO_RAW,,}/"
-          # Runtime fallback (copied to dist/) — form loads URL from JSON if Vite embed is missing
-          node -e "const fs=require('fs');const o={webAppUrl:process.env.SHEETS||''};if(process.env.FORM_SECRET){o.formSecret=process.env.FORM_SECRET;}fs.writeFileSync('public/contact-sheet-config.json',JSON.stringify(o));"
+          # Runtime fallbacks copied to dist/ (JSON fetch + blocking JS before React)
+          node -e "const fs=require('fs');const o={webAppUrl:process.env.SHEETS||''};if(process.env.FORM_SECRET){o.formSecret=process.env.FORM_SECRET;}fs.writeFileSync('public/contact-sheet-config.json',JSON.stringify(o));fs.writeFileSync('public/sheets-config.js','window.__LL_CONTACT_SHEETS__='+JSON.stringify(o)+';');"
           npm run build
-          node -e "const fs=require('fs');const h=fs.readFileSync('dist/index.html','utf8');if(!h.includes('__LL_CONTACT_SHEETS__')||!h.includes('script.google.com')){console.error('::error::dist/index.html must inject __LL_CONTACT_SHEETS__ with the Apps Script URL (check VITE_GOOGLE_SHEETS_WEBAPP_URL during build).');process.exit(1);}console.log('OK: Sheets config injected in index.html');"
+          node -e "const fs=require('fs');const h=fs.readFileSync('dist/index.html','utf8');const j=fs.existsSync('dist/sheets-config.js')&&fs.readFileSync('dist/sheets-config.js','utf8').includes('script.google.com');const inline=h.includes('__LL_CONTACT_SHEETS__')&&h.includes('script.google.com');if(!j&&!inline){console.error('::error::Sheets URL must appear in dist/sheets-config.js and/or inline in dist/index.html.');process.exit(1);}console.log('OK: Sheets URL present in build output');"
 
       - name: SPA fallback (refresh deep links on GitHub Pages)
         run: cp dist/index.html dist/404.html
