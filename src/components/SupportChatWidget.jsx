@@ -83,7 +83,8 @@ export function SupportChatWidget() {
     if (!t) return;
     const subject = encodeURIComponent("Liberia Libra — support chat");
     const body = encodeURIComponent(t);
-    window.open(`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`, "_blank");
+    /* Same-document navigation avoids window.opener issues with mailto in a new tab */
+    window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
     pushUser(t);
     pushBot("Thanks — your email app should open with this message. If it doesn’t, copy your note and use the Contact page.");
     setDraft("");
@@ -250,7 +251,7 @@ export function SupportChatWidget() {
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   rows={3}
-                  placeholder="Type a short message… (opens your email)"
+                  placeholder="Type a short message… (opens your email app)"
                   className="w-full resize-none rounded-xl border border-neutral-300 px-3 py-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-[var(--color-ll-accent)]"
                 />
                 <button

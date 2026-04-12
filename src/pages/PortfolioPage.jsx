@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PARTNERS } from "../data/partners.js";
+import { safeHttpUrl } from "../lib/safeHttpUrl.js";
 
 const FILTERS = ["All", "ICT", "Media", "DTP"];
 
@@ -100,20 +101,25 @@ export function PortfolioPage() {
             brief.
           </p>
           <ul className="mx-auto mt-8 grid max-w-6xl grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:grid-cols-3">
-            {PARTNERS.map((partner) => (
+            {PARTNERS.map((partner) => {
+              const safePartnerHref =
+                partner.placeholder || !("url" in partner) || !partner.url
+                  ? null
+                  : safeHttpUrl(partner.url);
+              return (
               <li key={partner.id}>
                 {partner.placeholder ? (
                   <div className="flex h-full min-h-[11rem] flex-col rounded-xl border border-dashed border-neutral-300 bg-neutral-50/70 p-4 sm:p-5">
                     <PartnerCardBody partner={partner} />
                   </div>
-                ) : partner.url ? (
+                ) : safePartnerHref ? (
                   <a
-                    href={partner.url}
+                    href={safePartnerHref}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block h-full rounded-xl border border-neutral-200/90 bg-white p-4 shadow-sm transition hover:border-[var(--color-ll-accent)]/35 hover:shadow-card sm:p-5"
                   >
-                    <PartnerCardBody partner={partner} />
+                    <PartnerCardBody partner={partner} showVisitHint />
                   </a>
                 ) : (
                   <div className="h-full rounded-xl border border-neutral-200/90 bg-gradient-to-br from-white to-neutral-50/80 p-4 shadow-sm sm:p-5">
@@ -121,7 +127,8 @@ export function PortfolioPage() {
                   </div>
                 )}
               </li>
-            ))}
+            );
+            })}
           </ul>
         </section>
       </div>
@@ -129,7 +136,7 @@ export function PortfolioPage() {
   );
 }
 
-function PartnerCardBody({ partner }) {
+function PartnerCardBody({ partner, showVisitHint = false }) {
   if (partner.placeholder) {
     return (
       <>
@@ -156,7 +163,7 @@ function PartnerCardBody({ partner }) {
       <p className="mt-2 text-xs leading-relaxed text-neutral-600 sm:text-sm">
         {partner.role}
       </p>
-      {partner.url ? (
+      {showVisitHint ? (
         <span className="mt-3 inline-block text-xs font-semibold text-[var(--color-ll-accent)]">
           Visit partner →
         </span>

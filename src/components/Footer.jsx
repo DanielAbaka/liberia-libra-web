@@ -128,6 +128,8 @@ export function Footer() {
           <div className="mt-3 flex flex-wrap gap-2">
             <a
               href="https://www.facebook.com/libraincorporated"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-neutral-200/90 bg-white px-4 py-2 text-xs font-medium text-neutral-700 shadow-sm transition hover:border-[var(--color-ll-accent)]/40 hover:text-[var(--color-ll-accent)] hover:shadow-md"
             >
               <IconFacebook className="h-4 w-4 shrink-0" aria-hidden />
@@ -135,6 +137,8 @@ export function Footer() {
             </a>
             <a
               href="https://www.linkedin.com/company/lib-libra-incorporated/?viewAsMember=true"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-neutral-200/90 bg-white px-4 py-2 text-xs font-medium text-neutral-700 shadow-sm transition hover:border-[var(--color-ll-accent)]/40 hover:text-[var(--color-ll-accent)] hover:shadow-md"
             >
               <IconLinkedIn className="h-4 w-4 shrink-0" aria-hidden />

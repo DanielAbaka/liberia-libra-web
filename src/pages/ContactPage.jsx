@@ -49,9 +49,11 @@ export function ContactPage() {
           </ul>
           <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:mt-8">
             <iframe
-              title="Map"
+              title="Map of Monrovia, Liberia"
               className="h-52 w-full border-0 min-[400px]:h-60 sm:h-64"
               loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
               src="https://www.google.com/maps?q=Monrovia%20Liberia&output=embed"
             />
           </div>

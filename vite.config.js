@@ -10,6 +10,10 @@ export default defineConfig({
       ? process.env.VITE_BASE_PATH || "/"
       : "/",
   plugins: [react(), tailwindcss()],
+  build: {
+    /** No `.map` files in production — avoids exposing original source structure. */
+    sourcemap: false,
+  },
   server: {
     port: 3000,
   },
