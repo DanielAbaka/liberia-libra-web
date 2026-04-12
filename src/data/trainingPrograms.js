@@ -133,6 +133,67 @@ export const TRAINING_PROGRAMS = [
   },
 ];
 
+/**
+ * ICT Track curriculum lines grouped for pre-enrollment (must match section headers in `curriculum`).
+ * @type {{ beginner: string[], intermediate: string[], advanced: string[] }}
+ */
+export const ICT_TRACK_COURSES_BY_LEVEL = (() => {
+  const ict = TRAINING_PROGRAMS.find((p) => p.id === "ict-track");
+  const out = { beginner: [], intermediate: [], advanced: [] };
+  if (!ict) return out;
+  /** @type {"beginner"|"intermediate"|"advanced"|null} */
+  let bucket = null;
+  for (const line of ict.curriculum) {
+    if (line === "Beginner Certificate Courses:") {
+      bucket = "beginner";
+      continue;
+    }
+    if (line === "Intermediate Certificate Courses:") {
+      bucket = "intermediate";
+      continue;
+    }
+    if (line === "Advanced Certificate Courses:") {
+      bucket = "advanced";
+      continue;
+    }
+    if (bucket && !line.endsWith(":")) {
+      out[bucket].push(line);
+    }
+  }
+  return out;
+})();
+
+/** @type {{ value: "beginner"|"intermediate"|"advanced", label: string }[]} */
+export const ICT_TRAINING_LEVEL_OPTIONS = [
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
+];
+
+/** Vocational Track course titles for pre-enrollment (from curriculum, excluding section header). */
+export const VOCATIONAL_TRACK_COURSES = (() => {
+  const v = TRAINING_PROGRAMS.find((p) => p.id === "vocational-track");
+  if (!v) return [];
+  const out = [];
+  for (const line of v.curriculum) {
+    if (line === "Vocational Certificate Courses:") continue;
+    if (!line.endsWith(":")) out.push(line);
+  }
+  return out;
+})();
+
+/** Professional Track course titles for pre-enrollment (from curriculum, excluding section header). */
+export const PROFESSIONAL_TRACK_COURSES = (() => {
+  const p = TRAINING_PROGRAMS.find((pr) => pr.id === "professional-track");
+  if (!p) return [];
+  const out = [];
+  for (const line of p.curriculum) {
+    if (line === "Professional Certificate Courses:") continue;
+    if (!line.endsWith(":")) out.push(line);
+  }
+  return out;
+})();
+
 export const TRAINING_BROCHURE_HREF = "/assets/libra-training-brochure.pdf";
 
 /**

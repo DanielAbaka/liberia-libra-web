@@ -1,8 +1,13 @@
 import { useEffect, useId, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
+  ICT_TRACK_COURSES_BY_LEVEL,
+  ICT_TRAINING_LEVEL_OPTIONS,
+  PROFESSIONAL_TRACK_COURSES,
   TRAINING_BROCHURE_HREF,
   TRAINING_CATEGORIES,
   TRAINING_PROGRAMS,
+  VOCATIONAL_TRACK_COURSES,
   flattenTrainingDates,
 } from "../data/trainingPrograms.js";
 
@@ -11,6 +16,9 @@ const initialForm = {
   email: "",
   phone: "",
   message: "",
+  trainingLevel: "",
+  trainingCourse: "",
+  vocationalCourse: "",
 };
 
 const DETAIL_TABS = [
@@ -83,7 +91,7 @@ function MonthCalendar({ year, month, highlightSet }) {
 function ModalChrome({ children, titleId, onClose, wide }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center p-0 sm:p-4 sm:items-center"
       role="presentation"
     >
       <button
@@ -118,6 +126,7 @@ export function TrainingPage() {
 
   const [enrollOpen, setEnrollOpen] = useState(false);
   const [enrollLabel, setEnrollLabel] = useState("");
+  const [enrollProgramId, setEnrollProgramId] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [sent, setSent] = useState(false);
 
@@ -158,6 +167,7 @@ export function TrainingPage() {
         setDetailsProgram(null);
         setEnrollOpen(false);
         setSent(false);
+        setEnrollProgramId(null);
       }
     };
     document.addEventListener("keydown", onKey);
@@ -178,9 +188,10 @@ export function TrainingPage() {
     setDetailsProgram(p);
   }
 
-  function openEnroll(programTitle) {
+  function openEnroll(programTitle, programId = null) {
     setEnrollLabel(programTitle);
-    setForm(initialForm);
+    setEnrollProgramId(programId);
+    setForm({ ...initialForm });
     setSent(false);
     setEnrollOpen(true);
   }
@@ -188,6 +199,7 @@ export function TrainingPage() {
   function closeEnroll() {
     setEnrollOpen(false);
     setSent(false);
+    setEnrollProgramId(null);
   }
 
   function handleSubmit(e) {
@@ -296,7 +308,7 @@ export function TrainingPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => openEnroll(p.title)}
+                  onClick={() => openEnroll(p.title, p.id)}
                   className="inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] hover:underline min-[400px]:px-2"
                 >
                   Register interest →
@@ -384,8 +396,9 @@ export function TrainingPage() {
         </p>
       </div>
 
-      {detailsProgram ? (
-        <ModalChrome titleId={detailsTitleId} wide onClose={() => setDetailsProgram(null)}>
+      {detailsProgram
+        ? createPortal(
+            <ModalChrome titleId={detailsTitleId} wide onClose={() => setDetailsProgram(null)}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h2
@@ -476,7 +489,7 @@ export function TrainingPage() {
             <button
               type="button"
               onClick={() => {
-                openEnroll(detailsProgram.title);
+                openEnroll(detailsProgram.title, detailsProgram.id);
                 setDetailsProgram(null);
               }}
               className="min-h-11 rounded-lg bg-[var(--color-ll-accent)] px-4 py-2 text-sm font-semibold text-white hover:brightness-110"
@@ -491,11 +504,14 @@ export function TrainingPage() {
               Close
             </button>
           </div>
-        </ModalChrome>
-      ) : null}
+            </ModalChrome>,
+            document.body,
+          )
+        : null}
 
-      {enrollOpen ? (
-        <ModalChrome titleId={enrollTitleId} onClose={closeEnroll}>
+      {enrollOpen
+        ? createPortal(
+            <ModalChrome titleId={enrollTitleId} onClose={closeEnroll}>
           <div className="flex items-start justify-between gap-3">
             <h2
               id={enrollTitleId}
@@ -527,6 +543,23 @@ export function TrainingPage() {
                 Thank you, <strong>{form.fullName || "there"}</strong>. Your interest in{" "}
                 <strong>{enrollLabel}</strong> has been recorded (demo—connect to your
                 backend or form service).
+                {enrollProgramId === "ict-track" && form.trainingLevel ? (
+                  <>
+                    {" "}
+                    Training level:{" "}
+                    <strong>
+                      {ICT_TRAINING_LEVEL_OPTIONS.find((o) => o.value === form.trainingLevel)
+                        ?.label ?? form.trainingLevel}
+                    </strong>
+                    . Course: <strong>{form.trainingCourse}</strong>.
+                  </>
+                ) : null}
+                {enrollProgramId === "vocational-track" && form.vocationalCourse ? (
+                  <> Course: <strong>{form.vocationalCourse}</strong>.</>
+                ) : null}
+                {enrollProgramId === "professional-track" && form.professionalCourse ? (
+                  <> Course: <strong>{form.professionalCourse}</strong>.</>
+                ) : null}
               </p>
               <button
                 type="button"
@@ -549,6 +582,103 @@ export function TrainingPage() {
                   className="mt-1 w-full min-h-11 cursor-default rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm text-neutral-800"
                 />
               </div>
+              {enrollProgramId === "ict-track" ? (
+                <>
+                  <div>
+                    <label htmlFor="pre-ict-level" className="block text-xs font-medium sm:text-sm">
+                      Training level *
+                    </label>
+                    <select
+                      id="pre-ict-level"
+                      name="trainingLevel"
+                      required
+                      value={form.trainingLevel}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          trainingLevel: e.target.value,
+                          trainingCourse: "",
+                        }))
+                      }
+                      className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                    >
+                      <option value="">Select level…</option>
+                      {ICT_TRAINING_LEVEL_OPTIONS.map((o) => (
+                        <option key={o.value} value={o.value}>
+                          {o.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="pre-ict-course" className="block text-xs font-medium sm:text-sm">
+                      Training course *
+                    </label>
+                    <select
+                      id="pre-ict-course"
+                      name="trainingCourse"
+                      required
+                      disabled={!form.trainingLevel}
+                      value={form.trainingCourse}
+                      onChange={(e) => updateField("trainingCourse", e.target.value)}
+                      className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 sm:text-sm"
+                    >
+                      <option value="">
+                        {form.trainingLevel ? "Select a course…" : "Select training level first"}
+                      </option>
+                      {(ICT_TRACK_COURSES_BY_LEVEL[form.trainingLevel] ?? []).map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              ) : null}
+              {enrollProgramId === "vocational-track" ? (
+                <div>
+                  <label htmlFor="pre-voc-course" className="block text-xs font-medium sm:text-sm">
+                    Course *
+                  </label>
+                  <select
+                    id="pre-voc-course"
+                    name="vocationalCourse"
+                    required
+                    value={form.vocationalCourse}
+                    onChange={(e) => updateField("vocationalCourse", e.target.value)}
+                    className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  >
+                    <option value="">Select a course…</option>
+                    {VOCATIONAL_TRACK_COURSES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+              {enrollProgramId === "professional-track" ? (
+                <div>
+                  <label htmlFor="pre-prof-course" className="block text-xs font-medium sm:text-sm">
+                    Course *
+                  </label>
+                  <select
+                    id="pre-prof-course"
+                    name="professionalCourse"
+                    required
+                    value={form.professionalCourse}
+                    onChange={(e) => updateField("professionalCourse", e.target.value)}
+                    className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2.5 text-base outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  >
+                    <option value="">Select a course…</option>
+                    {PROFESSIONAL_TRACK_COURSES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
               <div>
                 <label htmlFor="pre-name" className="block text-xs font-medium sm:text-sm">
                   Full name *
@@ -622,8 +752,10 @@ export function TrainingPage() {
               </div>
             </form>
           )}
-        </ModalChrome>
-      ) : null}
+            </ModalChrome>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
