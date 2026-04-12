@@ -12,7 +12,7 @@ export const HERO_SLIDES = [
   {
     id: "1",
     eyebrow: "Liberia Libra Incorporated",
-    headline: "Clarity, capability, and growth for people and organizations.",
+    headline: "Libra Training Cohort 5 certificates program",
     subtext:
       "Digital empowerment, vocational training, and technology solutions that help individuals, schools, and businesses across Liberia thrive.",
   },
@@ -145,7 +145,7 @@ export function HeroSlider({ children }) {
         <button
           type="button"
           onClick={() => go(-1)}
-          className="pointer-events-auto rounded-full border border-white/20 bg-black/30 p-2 text-white backdrop-blur-sm transition hover:bg-black/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[480px]:p-2.5"
+          className="pointer-events-auto rounded-full border border-white/25 bg-black/35 p-2 text-white shadow-lg shadow-black/30 backdrop-blur-md transition hover:bg-black/50 hover:ring-2 hover:ring-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[480px]:p-2.5"
           aria-label="Previous slide"
         >
           <Chevron className="h-4 w-4 rotate-180 min-[480px]:h-5 min-[480px]:w-5" />
@@ -153,7 +153,7 @@ export function HeroSlider({ children }) {
         <button
           type="button"
           onClick={() => go(1)}
-          className="pointer-events-auto rounded-full border border-white/20 bg-black/30 p-2 text-white backdrop-blur-sm transition hover:bg-black/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[480px]:p-2.5"
+          className="pointer-events-auto rounded-full border border-white/25 bg-black/35 p-2 text-white shadow-lg shadow-black/30 backdrop-blur-md transition hover:bg-black/50 hover:ring-2 hover:ring-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[480px]:p-2.5"
           aria-label="Next slide"
         >
           <Chevron className="h-4 w-4 min-[480px]:h-5 min-[480px]:w-5" />
@@ -175,8 +175,8 @@ export function HeroSlider({ children }) {
             onClick={() => setIndex(i)}
             className={`h-2.5 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] ${
               i === index
-                ? "w-8 bg-[var(--color-ll-accent)]"
-                : "w-2.5 bg-white/40 hover:bg-white/60"
+                ? "w-8 bg-[var(--color-ll-accent)] shadow-md shadow-[var(--color-ll-accent)]/50"
+                : "w-2.5 bg-white/45 hover:bg-white/70"
             }`}
           />
         ))}
@@ -192,7 +192,7 @@ function Chevron({ className = "h-5 w-5" }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden

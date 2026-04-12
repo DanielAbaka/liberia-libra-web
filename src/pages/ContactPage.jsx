@@ -9,7 +9,7 @@ export function ContactPage() {
   }
 
   return (
-    <div className="min-h-[50vh] overflow-x-hidden px-3 py-10 sm:px-6 sm:py-16">
+    <div className="min-h-[50vh] overflow-x-hidden bg-[var(--color-ll-page)] px-3 py-10 sm:px-6 sm:py-16">
       <div className="mx-auto grid max-w-[1120px] grid-cols-1 gap-8 min-[480px]:gap-10 lg:grid-cols-2 lg:gap-12">
         <div className="min-w-0">
           <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-3xl sm:text-4xl">
@@ -47,7 +47,7 @@ export function ContactPage() {
               </span>
             </li>
           </ul>
-          <div className="mt-6 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm sm:mt-8">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:mt-8">
             <iframe
               title="Map"
               className="h-52 w-full border-0 min-[400px]:h-60 sm:h-64"
@@ -60,7 +60,7 @@ export function ContactPage() {
         <div className="min-w-0">
           <form
             onSubmit={handleSubmit}
-            className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-6"
+            className="rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-card sm:p-6"
           >
             <div className="space-y-3 sm:space-y-4">
               <div>
@@ -74,7 +74,7 @@ export function ContactPage() {
                   id="name"
                   name="name"
                   required
-                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base text-neutral-900 outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
                 />
               </div>
               <div>
@@ -90,7 +90,7 @@ export function ContactPage() {
                   type="email"
                   required
                   autoComplete="email"
-                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base text-neutral-900 outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
                 />
               </div>
               <div>
@@ -106,7 +106,7 @@ export function ContactPage() {
                   type="tel"
                   required
                   autoComplete="tel"
-                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base text-neutral-900 outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
                 />
               </div>
               <div>
@@ -121,7 +121,7 @@ export function ContactPage() {
                   name="message"
                   required
                   rows={5}
-                  className="mt-1 w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-base text-neutral-900 outline-none focus:border-[var(--color-ll-accent)] sm:text-sm"
+                  className="mt-1 w-full rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export function ContactPage() {
             ) : null}
             <button
               type="submit"
-              className="mt-5 w-full min-h-11 rounded-lg bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white hover:brightness-110 sm:mt-6 sm:w-auto sm:px-8"
+              className="mt-5 w-full min-h-11 rounded-xl bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/30 transition hover:brightness-110 hover:shadow-xl active:scale-[0.99] sm:mt-6 sm:w-auto sm:px-8"
             >
               Send message
             </button>

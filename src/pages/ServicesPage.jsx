@@ -110,13 +110,13 @@ export function ServicesPage() {
             <li
               key={s.id}
               id={s.id}
-              className="flex min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm"
+              className="group flex min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card transition duration-300 hover:border-neutral-300 hover:shadow-lg"
             >
               <div
-                className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#1a1a4b]/[0.07] to-[#5a7a2e]/[0.12]"
+                className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[var(--color-ll-surface)]/[0.08] via-neutral-50 to-[var(--color-ll-accent-dim)]/[0.14]"
                 aria-hidden
               >
-                <s.Icon className="h-12 w-12 text-[#1a1a4b] sm:h-14 sm:w-14" />
+                <s.Icon className="h-12 w-12 text-[var(--color-ll-surface)] opacity-90 transition duration-300 group-hover:scale-105 sm:h-14 sm:w-14" />
               </div>
               <div className="p-4 sm:p-6">
                 <h2 className="text-lg font-semibold leading-snug text-neutral-900 sm:text-xl">

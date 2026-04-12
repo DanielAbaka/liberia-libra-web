@@ -14,27 +14,35 @@ const nav = [
 
 const linkClass = ({ isActive }) =>
   [
-    "rounded-md px-2 py-1 text-sm font-medium transition-colors",
+    "rounded-full px-3.5 py-2 text-sm font-medium transition-all duration-200",
     isActive
-      ? "bg-[var(--color-ll-surface)] text-white"
-      : "text-[var(--color-ll-muted)] hover:text-white",
+      ? "bg-white/12 text-white shadow-sm ring-1 ring-white/15"
+      : "text-white/70 hover:bg-white/[0.06] hover:text-white",
   ].join(" ");
 
 export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-ll-bg/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-2 px-3 py-3 min-[400px]:gap-3 min-[400px]:px-4 sm:gap-4 sm:px-6 sm:py-4">
+    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-[color-mix(in_srgb,var(--color-ll-bg)_88%,transparent)] shadow-sm shadow-black/15 backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-2 px-3 py-3 min-[400px]:gap-3 min-[400px]:px-4 sm:gap-4 sm:px-6 sm:py-3.5">
         <NavLink
           to="/"
-          className="min-w-0 max-w-[min(100%,11rem)] font-[family-name:var(--font-display)] text-xs font-bold leading-tight text-white no-underline hover:opacity-90 min-[360px]:max-w-[min(100%,14rem)] min-[360px]:text-sm sm:max-w-none sm:text-lg"
+          className="flex min-w-0 shrink items-center no-underline hover:opacity-95"
+          aria-label="Liberia Libra Incorporated — Home"
         >
-          Liberia Libra Incorporated
+          <img
+            src="/libra-logo.png"
+            alt="Liberia Libra Incorporated"
+            width={200}
+            height={50}
+            className="h-8 w-auto max-w-[min(11rem,52vw)] object-contain object-left sm:h-10 sm:max-w-[13rem]"
+            decoding="async"
+          />
         </NavLink>
 
         <nav
-          className="hidden items-center gap-1 md:flex"
+          className="hidden items-center gap-0.5 md:flex"
           aria-label="Primary"
         >
           {nav.map(({ to, label, end }) => (
@@ -46,7 +54,7 @@ export function Header() {
 
         <button
           type="button"
-          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[var(--color-ll-surface)] text-white md:hidden"
+          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/[0.08] text-white shadow-md shadow-black/20 transition hover:bg-white/[0.12] md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -61,20 +69,20 @@ export function Header() {
       {open ? (
         <nav
           id="mobile-nav"
-          className="border-t border-white/10 bg-[var(--color-ll-bg)] px-3 py-3 sm:px-4 sm:py-4 md:hidden"
+          className="border-t border-white/[0.07] bg-[color-mix(in_srgb,var(--color-ll-bg)_96%,transparent)] px-3 py-4 backdrop-blur-md sm:px-4 md:hidden"
           aria-label="Mobile"
         >
-          <div className="mx-auto flex max-w-[1120px] flex-col gap-0.5 sm:gap-1">
+          <div className="mx-auto flex max-w-[1120px] flex-col gap-1">
             {nav.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  `rounded-lg px-3 py-3 text-base no-underline ${
+                  `rounded-xl px-4 py-3.5 text-base font-medium no-underline transition-colors ${
                     isActive
-                      ? "bg-[var(--color-ll-surface)] text-[var(--color-ll-accent)]"
-                      : "text-white/90 hover:bg-white/5"
+                      ? "bg-white/12 text-white ring-1 ring-white/15"
+                      : "text-white/85 hover:bg-white/[0.06]"
                   }`
                 }
                 onClick={() => setOpen(false)}

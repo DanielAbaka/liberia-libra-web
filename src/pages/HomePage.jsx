@@ -4,9 +4,9 @@ import { IconIct, IconLayout, IconMedia, IconTraining } from "../components/Serv
 import { BLOG_POSTS } from "../data/blogPosts.js";
 
 const btnPrimary =
-  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full bg-[var(--color-ll-accent)] px-4 py-2 text-xs font-semibold text-white no-underline hover:brightness-110 min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
+  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full bg-[var(--color-ll-accent)] px-4 py-2 text-xs font-semibold text-white no-underline shadow-lg shadow-[var(--color-ll-accent)]/35 transition hover:brightness-110 hover:shadow-xl hover:shadow-[var(--color-ll-accent)]/40 active:scale-[0.98] min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
 const btnGhost =
-  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full border border-white/25 bg-black/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm no-underline hover:bg-white/10 min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
+  "inline-flex min-h-10 min-w-[44px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-black/10 backdrop-blur-md no-underline transition hover:bg-white/18 active:scale-[0.98] min-[400px]:min-h-11 min-[400px]:px-5 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6";
 
 export function HomePage() {
   return (
@@ -22,7 +22,7 @@ export function HomePage() {
         </div>
       </HeroSlider>
 
-      <section className="border-t border-neutral-200 bg-white px-3 py-12 sm:px-6 sm:py-16">
+      <section className="border-t border-neutral-200/80 bg-[var(--color-ll-page)] px-3 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-[1120px]">
           <div className="grid gap-8 min-[480px]:gap-10 lg:grid-cols-2 lg:items-center">
             <div className="min-w-0">
@@ -38,7 +38,7 @@ export function HomePage() {
                 About us
               </Link>
             </div>
-            <div className="min-w-0 rounded-xl border border-neutral-200 bg-neutral-50 p-4 shadow-sm sm:p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-card sm:p-6">
               <p className="text-xs leading-relaxed text-neutral-600 sm:text-sm">
                 We also offer free training programs that equip individuals with
                 essential technology skills, promoting continuous learning.
@@ -48,7 +48,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-neutral-200 bg-white px-3 py-12 sm:px-6 sm:py-16">
+      <section className="border-y border-neutral-200/80 bg-[var(--color-ll-page)] px-3 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-[1120px]">
           <h2 className="font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-[#1a1a4b] min-[400px]:text-2xl sm:text-3xl">
             Featured services
@@ -86,13 +86,13 @@ export function HomePage() {
             ].map((c) => (
               <li
                 key={c.title}
-                className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 shadow-sm"
+                className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card transition duration-300 hover:border-neutral-300 hover:shadow-lg"
               >
                 <div
-                  className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#1a1a4b]/[0.07] to-[#5a7a2e]/[0.12]"
+                  className="relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[var(--color-ll-surface)]/[0.08] via-neutral-50 to-[var(--color-ll-accent-dim)]/[0.14]"
                   aria-hidden
                 >
-                  <c.Icon className="h-12 w-12 text-[#1a1a4b] sm:h-14 sm:w-14" />
+                  <c.Icon className="h-12 w-12 text-[var(--color-ll-surface)] opacity-90 transition duration-300 group-hover:scale-105 sm:h-14 sm:w-14" />
                 </div>
                 <div className="flex flex-1 flex-col p-4 min-[480px]:p-5">
                   <h3 className="text-base font-semibold leading-snug text-neutral-900">
@@ -103,9 +103,9 @@ export function HomePage() {
                   </p>
                   <Link
                     to={c.to}
-                    className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--color-ll-accent)] no-underline hover:underline"
+                    className="mt-4 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[var(--color-ll-accent)] no-underline transition hover:gap-2 hover:underline"
                   >
-                    Learn more →
+                    Learn more <span aria-hidden>→</span>
                   </Link>
                 </div>
               </li>
@@ -114,7 +114,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-neutral-200 bg-white px-3 py-12 sm:px-6 sm:py-16">
+      <section className="border-t border-neutral-200/80 bg-[var(--color-ll-page)] px-3 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-[1120px]">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -138,7 +138,7 @@ export function HomePage() {
             {BLOG_POSTS.slice(0, 3).map((post) => (
               <li
                 key={post.id}
-                className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 shadow-sm"
+                className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card transition duration-300 hover:border-neutral-300 hover:shadow-lg"
               >
                 <img
                   src={post.image}

@@ -1,3 +1,11 @@
+/** Rounded stroke icons (24×24) — consistent with modern UI sets */
+
+const stroke = {
+  width: "1.5",
+  cap: "round",
+  join: "round",
+};
+
 export function IconIct({ className }) {
   return (
     <svg
@@ -5,13 +13,14 @@ export function IconIct({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={stroke.width}
+      strokeLinecap={stroke.cap}
+      strokeLinejoin={stroke.join}
       aria-hidden
     >
-      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-      <path d="M8 21h8M12 17v4" />
+      <rect x="3" y="4" width="18" height="12" rx="2" />
+      <path d="M8 20h8" />
+      <path d="M12 16v4" />
     </svg>
   );
 }
@@ -23,13 +32,13 @@ export function IconMedia({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={stroke.width}
+      strokeLinecap={stroke.cap}
+      strokeLinejoin={stroke.join}
       aria-hidden
     >
-      <path d="M3 11l18-5v12L3 13v-2z" />
-      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+      <rect x="2" y="6" width="14" height="12" rx="2" />
+      <path d="m16 10 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 10.5" />
     </svg>
   );
 }
@@ -41,14 +50,15 @@ export function IconLayout({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={stroke.width}
+      strokeLinecap={stroke.cap}
+      strokeLinejoin={stroke.join}
       aria-hidden
     >
-      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-      <path d="M13 2v7h7" />
-      <path d="M8 13h8M8 17h8M8 9h5" />
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
     </svg>
   );
 }
@@ -60,12 +70,12 @@ export function IconTraining({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={stroke.width}
+      strokeLinecap={stroke.cap}
+      strokeLinejoin={stroke.join}
       aria-hidden
     >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+      <path d="M22 10v6M2 10l10-5 10 5-10 5L2 10Z" />
       <path d="M6 12v5c3 3 9 3 12 0v-5" />
     </svg>
   );

@@ -3,15 +3,19 @@
 @theme {
   --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  --color-ll-bg: #0a0a2e;
-  --color-ll-elevated: #121244;
-  --color-ll-surface: #1a1a4b;
+  --color-ll-bg: #070720;
+  --color-ll-elevated: #0f0f3a;
+  --color-ll-surface: #16164a;
   --color-ll-footer: #1a1a4b;
-  --color-ll-accent: #d32f2f;
-  --color-ll-accent-dim: #8bc34a;
-  --color-ll-muted: #b4b7dc;
-  --color-ll-page: #ffffff;
-  --color-ll-page-text: #1a1a24;
+  --color-ll-accent: #e53935;
+  --color-ll-accent-dim: #9ccc65;
+  --color-ll-muted: #c5c8e8;
+  --color-ll-page: #fafafc;
+  --color-ll-page-text: #14141f;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05),
+    0 8px 24px -6px rgb(15 23 42 / 0.08);
+  --shadow-float: 0 12px 40px -12px rgb(0 0 0 / 0.22),
+    0 4px 14px -4px rgb(0 0 0 / 0.1);
 }
 
 html {
@@ -25,6 +29,7 @@ body {
   background-color: var(--color-ll-page);
   color: var(--color-ll-page-text);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #root {

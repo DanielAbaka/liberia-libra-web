@@ -97,8 +97,8 @@ export function SupportChatWidget() {
           setOpen((o) => !o);
           if (open) setSent(false);
         }}
-        className={`fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[400px]:bottom-6 min-[400px]:right-6 ${
-          open ? "bg-neutral-700" : "bg-[var(--color-ll-accent)]"
+        className={`fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full shadow-float ring-2 ring-white/90 transition hover:brightness-110 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)] min-[400px]:bottom-6 min-[400px]:right-6 ${
+          open ? "bg-neutral-800 ring-white/20" : "bg-[var(--color-ll-accent)]"
         } text-white`}
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
@@ -120,9 +120,9 @@ export function SupportChatWidget() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={`${panelId}-title`}
-            className="fixed inset-x-0 bottom-0 z-[60] flex max-h-[min(88dvh,640px)] flex-col rounded-t-2xl border border-neutral-200 bg-white shadow-2xl md:inset-auto md:bottom-6 md:right-6 md:w-[min(100vw-2rem,400px)] md:rounded-2xl"
+            className="fixed inset-x-0 bottom-0 z-[60] flex max-h-[min(88dvh,640px)] flex-col rounded-t-3xl border border-neutral-200/90 bg-white shadow-float ring-1 ring-black/[0.04] md:inset-auto md:bottom-6 md:right-6 md:w-[min(100vw-2rem,400px)] md:rounded-2xl"
           >
-            <div className="flex items-center justify-between gap-2 border-b border-neutral-200 px-4 py-3">
+            <div className="flex items-center justify-between gap-2 border-b border-neutral-100 bg-neutral-50/50 px-4 py-3.5">
               <div className="min-w-0">
                 <p
                   id={`${panelId}-title`}
@@ -135,7 +135,7 @@ export function SupportChatWidget() {
               <button
                 type="button"
                 onClick={close}
-                className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100"
+                className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-200/80"
                 aria-label="Close"
               >
                 <IconClose className="h-5 w-5" />
@@ -269,7 +269,8 @@ function IconChat() {
       <path
         d="M12 3C7.03 3 3 6.58 3 11c0 2.13 1.03 4.05 2.71 5.4L4 21l4.85-1.62A9.3 9.3 0 0012 19c4.97 0 9-3.58 9-8s-4.03-8-9-8z"
         stroke="currentColor"
-        strokeWidth="1.75"
+        strokeWidth="1.5"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
       <circle cx="9" cy="11" r="1" fill="currentColor" />
@@ -282,7 +283,7 @@ function IconChat() {
 function IconClose({ className = "h-6 w-6" }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
-      <path d="M18 6L6 18M6 6l12 12" strokeWidth="2" strokeLinecap="round" />
+      <path d="M18 6L6 18M6 6l12 12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
