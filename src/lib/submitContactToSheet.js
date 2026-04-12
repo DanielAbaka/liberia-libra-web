@@ -3,11 +3,21 @@
  * Uses URL-encoded body to avoid CORS preflight issues with script.google.com.
  *
  * URL resolution (first match wins):
- * 1) VITE_GOOGLE_SHEETS_WEBAPP_URL at build time (Vite)
- * 2) /contact-sheet-config.json at runtime (written in CI — survives odd embed issues)
+ * 1) VITE_GOOGLE_SHEETS_WEBAPP_URL (Vite embed)
+ * 2) window.__LL_CONTACT_SHEETS__ from index.html (vite.config inject — reliable on GitHub Pages)
+ * 3) contact-sheet-config.json fetch (CI-written; may 404 → HTML on some hosts, so we validate JSON shape)
  *
- * Optional secret: VITE_CONTACT_FORM_SECRET, or formSecret in that JSON (must match Apps Script).
+ * Optional secret: VITE_CONTACT_FORM_SECRET, window config, or formSecret in JSON.
  */
+
+function readWindowContactConfig() {
+  if (typeof window === "undefined") return null;
+  const raw = window["__LL_CONTACT_SHEETS__"];
+  if (!raw || typeof raw !== "object") return null;
+  const o = /** @type {Record<string, unknown>} */ (raw);
+  if (typeof o.webAppUrl !== "string" || !o.webAppUrl.trim()) return null;
+  return o;
+}
 
 /** @type {Promise<Record<string, unknown> | null> | null} */
 let runtimeConfigPromise = null;
@@ -16,10 +26,14 @@ function getRuntimeConfig() {
   if (runtimeConfigPromise == null) {
     runtimeConfigPromise = (async () => {
       try {
-        const base = import.meta.env.BASE_URL || "/";
+        const baseRaw = import.meta.env.BASE_URL || "/";
+        const base = baseRaw.endsWith("/") ? baseRaw : `${baseRaw}/`;
         const res = await fetch(`${base}contact-sheet-config.json`, { cache: "no-store" });
         if (!res.ok) return null;
-        const j = await res.json();
+        const text = await res.text();
+        const t = text.trimStart();
+        if (!t.startsWith("{")) return null;
+        const j = JSON.parse(text);
         return j && typeof j === "object" ? j : null;
       } catch {
         return null;
@@ -43,6 +57,8 @@ function normalizeSheetsWebAppUrl(raw) {
 async function resolveWebAppUrl() {
   const fromEnv = normalizeSheetsWebAppUrl(import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL);
   if (fromEnv) return fromEnv;
+  const win = readWindowContactConfig();
+  if (win) return normalizeSheetsWebAppUrl(String(win.webAppUrl));
   const cfg = await getRuntimeConfig();
   return normalizeSheetsWebAppUrl(cfg?.webAppUrl);
 }
@@ -50,6 +66,9 @@ async function resolveWebAppUrl() {
 async function resolveFormSecret() {
   const e = import.meta.env.VITE_CONTACT_FORM_SECRET;
   if (typeof e === "string" && e.trim()) return e.trim();
+  const win = readWindowContactConfig();
+  const ws = win?.formSecret;
+  if (typeof ws === "string" && ws.trim()) return ws.trim();
   const cfg = await getRuntimeConfig();
   const s = cfg?.formSecret;
   return typeof s === "string" && s.trim() ? s.trim() : "";
