@@ -108,7 +108,7 @@ export function Footer() {
               <strong className="text-neutral-900">Phone</strong>
               <br />
               <span className="text-neutral-600">
-                +231 777 000 000 031
+                +231 777 000 031
               </span>
             </li>
             <li>
