@@ -16,8 +16,8 @@ export function ContactPage() {
             Contact
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-neutral-600 sm:text-base">
-            Replace placeholders with Liberia Libra Incorporated address, hours,
-            department links, map embed, and form POST / Google Forms / API.
+            Reach us by email, visit during office hours, or send a message using
+            the form—we’ll get back to you as soon as we can.
           </p>
           <ul className="mt-6 space-y-3 text-xs sm:mt-8 sm:space-y-4 sm:text-sm">
             <li>

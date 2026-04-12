@@ -14,7 +14,7 @@ export const HERO_SLIDES = [
     eyebrow: "Liberia Libra Incorporated",
     headline: "Clarity, capability, and growth for people and organizations.",
     subtext:
-      "This site is built with React, Vite, and Tailwind CSS—ready for your content, forms, and integrations.",
+      "Digital empowerment, vocational training, and technology solutions that help individuals, schools, and businesses across Liberia thrive.",
   },
   {
     id: "2",

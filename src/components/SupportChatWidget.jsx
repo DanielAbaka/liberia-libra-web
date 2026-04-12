@@ -1,8 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-/** Update when you publish a real support inbox */
-const SUPPORT_EMAIL = "info@example.com";
+const SUPPORT_EMAIL = "liberialibrainc@gmail.com";
 
 const INITIAL_BOT =
   "Hi — quick answers and links are below. For a detailed request, send us a message and we’ll follow up.";
@@ -12,7 +11,7 @@ const FAQ = [
     id: "hours",
     prompt: "Office hours?",
     reply:
-      "Typical hours: Mon–Fri 8:00–17:00 · Sat 9:00–13:00. Use Contact for urgent requests.",
+      "Office hours: Mon–Fri 8:00–17:00 · Sat 9:00–14:00. Use Contact for urgent requests.",
   },
   {
     id: "training",

@@ -54,7 +54,8 @@ export function HomePage() {
             Featured services
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-            Replace with your real offerings; routing is wired for full pages.
+            From ICT and media consultancy to desktop publishing and training—we
+            help you plan, deliver, and grow.
           </p>
           <ul className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 min-[480px]:grid-cols-2 min-[480px]:gap-5 lg:gap-6 xl:grid-cols-4">
             {[
