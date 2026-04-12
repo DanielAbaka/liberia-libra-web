@@ -10,9 +10,16 @@
  * @param {{ name: string, email: string, phone: string, message: string }} fields
  * @returns {Promise<{ ok: true } | { ok: false, error: string }>}
  */
+function normalizeSheetsWebAppUrl(raw) {
+  let s = String(raw || "").trim();
+  const wronglyPasted = "VITE_GOOGLE_SHEETS_WEBAPP_URL=";
+  if (s.startsWith(wronglyPasted)) s = s.slice(wronglyPasted.length).trim();
+  return s;
+}
+
 export async function submitContactToSheet(fields) {
-  const url = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL;
-  if (typeof url !== "string" || !url.trim()) {
+  const url = normalizeSheetsWebAppUrl(import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL);
+  if (!url) {
     return { ok: false, error: "not_configured" };
   }
 
@@ -28,7 +35,7 @@ export async function submitContactToSheet(fields) {
   }
 
   try {
-    const res = await fetch(url.trim(), {
+    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: params.toString(),

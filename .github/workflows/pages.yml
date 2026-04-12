@@ -33,6 +33,22 @@ jobs:
 
       - run: npm ci
 
+      # If this secret is missing, Vite still "builds" but the contact form shows not_configured — fail loud.
+      - name: Check VITE_GOOGLE_SHEETS_WEBAPP_URL secret
+        shell: bash
+        env:
+          SHEETS_URL: ${{ secrets.VITE_GOOGLE_SHEETS_WEBAPP_URL }}
+        run: |
+          if [ -z "${SHEETS_URL// }" ]; then
+            echo "::error::Repository secret VITE_GOOGLE_SHEETS_WEBAPP_URL is missing or empty."
+            echo "::error::GitHub → your repo → Settings → Secrets and variables → Actions → New repository secret."
+            echo "::error::Name must be exactly: VITE_GOOGLE_SHEETS_WEBAPP_URL (same spelling as in pages.yml)"
+            exit 1
+          fi
+          if [[ "$SHEETS_URL" != *"script.google.com"* ]] || [[ "$SHEETS_URL" != *"/exec"* ]]; then
+            echo "::warning::Value should be your Web app URL (https://script.google.com/macros/s/.../exec)"
+          fi
+
       # GitHub Pages URLs are lowercase; mixed-case repo names break script/CSS loads → blank page
       # Vite bakes VITE_* into the JS at build time — add these as repo Secrets (Settings → Secrets).
       - name: Build
