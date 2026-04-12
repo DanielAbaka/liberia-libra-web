@@ -17,7 +17,7 @@ const FAQ = [
     id: "training",
     prompt: "Training programs?",
     reply:
-      "We offer ICT, Vocational, and Professional tracks with curriculum and key dates on the Training page.",
+      "We offer ICT, Vocational, and Professional tracks—see curriculum, cost, duration, and schedule on the Training page.",
     link: { to: "/training", label: "Open training" },
   },
   {

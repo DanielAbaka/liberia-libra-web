@@ -1,6 +1,10 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
+  splitCostForBoldSegments,
+  splitScheduleForBoldSegments,
+} from "../lib/trainingCostBold.js";
+import {
   ICT_TRACK_COURSES_BY_LEVEL,
   ICT_TRAINING_LEVEL_OPTIONS,
   PROFESSIONAL_TRACK_COURSES,
@@ -23,9 +27,8 @@ const initialForm = {
 
 const DETAIL_TABS = [
   { id: "curriculum", label: "Curriculum" },
-  { id: "schedule", label: "Schedule" },
   { id: "cost", label: "Cost" },
-  { id: "dates", label: "Key dates" },
+  { id: "dates", label: "Duration and Schedule" },
 ];
 
 function formatLongDate(iso) {
@@ -232,7 +235,7 @@ export function TrainingPage() {
         />
         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
           Each card is a full training track. Filter or search, open a track for
-          curriculum, schedule, and cost, review key dates on the calendar, and
+          curriculum, cost, and duration and session timing, review the calendar, and
           download the brochure.
         </p>
 
@@ -496,24 +499,76 @@ export function TrainingPage() {
                 ))}
               </ul>
             ) : null}
-            {detailTab === "schedule" ? (
-              <p className="leading-relaxed">{detailsProgram.schedule}</p>
+            {detailTab === "cost" ? (
+              <div className="leading-relaxed">
+                {detailsProgram.cost.split("\n").map((line, i) =>
+                  line === "" ? (
+                    <br key={`e-${i}`} />
+                  ) : (
+                    <p key={i} className="mb-1 last:mb-0">
+                      {splitCostForBoldSegments(line).map((seg, j) =>
+                        seg.bold ? (
+                          <strong key={j} className="font-semibold text-neutral-900">
+                            {seg.text}
+                          </strong>
+                        ) : (
+                          <span key={j}>{seg.text}</span>
+                        )
+                      )}
+                    </p>
+                  )
+                )}
+              </div>
             ) : null}
-            {detailTab === "cost" ? <p className="leading-relaxed">{detailsProgram.cost}</p> : null}
             {detailTab === "dates" ? (
-              <ul className="space-y-3">
-                {detailsProgram.keyDates.map((kd) => (
-                  <li
-                    key={`${kd.date}-${kd.label}`}
-                    className="flex flex-col gap-0.5 border-b border-neutral-100 pb-3 last:border-0 sm:flex-row sm:justify-between"
-                  >
-                    <span className="font-medium text-neutral-900">{kd.label}</span>
-                    <time className="text-[var(--color-ll-accent)]" dateTime={kd.date}>
-                      {formatLongDate(kd.date)}
-                    </time>
-                  </li>
-                ))}
-              </ul>
+              detailsProgram.durationBlock ? (
+                <div className="space-y-4">
+                  <p className="text-base font-semibold text-neutral-900 sm:text-lg">
+                    {detailsProgram.durationBlock.headline}
+                  </p>
+                  <p className="leading-relaxed text-neutral-700">
+                    {splitScheduleForBoldSegments(detailsProgram.durationBlock.summary).map(
+                      (seg, j) =>
+                        seg.bold ? (
+                          <strong key={j} className="font-semibold text-neutral-900">
+                            {seg.text}
+                          </strong>
+                        ) : (
+                          <span key={j}>{seg.text}</span>
+                        )
+                    )}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {detailsProgram.schedule ? (
+                    <p className="leading-relaxed text-neutral-700">
+                      {splitScheduleForBoldSegments(detailsProgram.schedule).map((seg, j) =>
+                        seg.bold ? (
+                          <strong key={j} className="font-semibold text-neutral-900">
+                            {seg.text}
+                          </strong>
+                        ) : (
+                          <span key={j}>{seg.text}</span>
+                        )
+                      )}
+                    </p>
+                  ) : null}
+                  <ul className="space-y-3">
+                    {detailsProgram.keyDates.map((kd) => (
+                      <li
+                        key={`${kd.date}-${kd.label}`}
+                        className="flex flex-col gap-0.5 border-b border-neutral-100 pb-3 last:border-0 sm:flex-row sm:justify-between"
+                      >
+                        <span className="font-medium text-neutral-900">{kd.label}</span>
+                        <time className="text-[var(--color-ll-accent)]" dateTime={kd.date}>
+                          {formatLongDate(kd.date)}
+                        </time>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
             ) : null}
           </div>
 

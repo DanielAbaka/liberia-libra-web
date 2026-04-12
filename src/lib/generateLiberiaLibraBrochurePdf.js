@@ -3,6 +3,10 @@ import { TRAINING_PROGRAMS } from "../data/trainingPrograms.js";
 import { SERVICES_CATALOG } from "../data/servicesCatalog.js";
 import { COMPANY_CONTACT } from "../data/companyContact.js";
 import { publicAsset } from "./publicAsset.js";
+import {
+  splitCostForBoldSegments,
+  splitScheduleForBoldSegments,
+} from "./trainingCostBold.js";
 
 const navy = [26, 26, 75];
 const accent = [229, 57, 53];
@@ -75,6 +79,37 @@ export async function downloadLiberiaLibraBrochurePdf() {
       doc.text(line, margin, y);
       y += lineHeight;
     }
+  }
+
+  /** One paragraph with inline bold segments when the full line fits on one row. */
+  function printRichInlineBlock(block, splitFn) {
+    const parts = splitFn(block);
+    if (!parts.some((p) => p.bold)) {
+      printParagraph(block, 9, gray, 4.5);
+      return;
+    }
+    const lh = 4.5;
+    const fs = 9;
+    doc.setFontSize(fs);
+    doc.setTextColor(gray[0], gray[1], gray[2]);
+    let totalW = 0;
+    for (const part of parts) {
+      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      totalW += doc.getTextWidth(part.text);
+    }
+    if (totalW > textW()) {
+      printParagraph(block, 9, gray, 4.5);
+      return;
+    }
+    needSpace(lh);
+    let x = margin;
+    for (const part of parts) {
+      if (!part.text) continue;
+      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      doc.text(part.text, x, y);
+      x += doc.getTextWidth(part.text);
+    }
+    y += lh;
   }
 
   function printBullets(lines, size = 9, color = gray, indent = 2) {
@@ -167,12 +202,23 @@ export async function downloadLiberiaLibraBrochurePdf() {
         printBullets([line]);
       }
     }
-    printParagraph("Schedule", 10, accent, 5.5, "bold");
-    printParagraph(p.schedule, 9, gray, 4.5);
     printParagraph("Cost", 10, accent, 5.5, "bold");
-    printParagraph(p.cost, 9, gray, 4.5);
-    printParagraph("Key dates", 10, accent, 5.5, "bold");
-    printBullets(p.keyDates.map((kd) => `${kd.label}: ${formatPdfDate(kd.date)}`));
+    for (const block of p.cost
+      .split(/\n+/)
+      .map((s) => s.trim())
+      .filter(Boolean)) {
+      printRichInlineBlock(block, splitCostForBoldSegments);
+    }
+    printParagraph("Duration and Schedule", 10, accent, 5.5, "bold");
+    if (p.durationBlock) {
+      printParagraph(p.durationBlock.headline, 10, navy, 5.5, "bold");
+      printRichInlineBlock(p.durationBlock.summary, splitScheduleForBoldSegments);
+    } else {
+      if (p.schedule) {
+        printRichInlineBlock(p.schedule, splitScheduleForBoldSegments);
+      }
+      printBullets(p.keyDates.map((kd) => `${kd.label}: ${formatPdfDate(kd.date)}`));
+    }
     y += 4;
   }
 

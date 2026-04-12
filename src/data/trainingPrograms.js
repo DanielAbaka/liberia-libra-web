@@ -9,9 +9,10 @@
  * @property {string} summary
  * @property {TrainingCoverImage} coverImage
  * @property {string[]} curriculum
- * @property {string} schedule
+ * @property {string} [schedule] Session-timing copy; shown under Duration and Schedule (and PDF) when no durationBlock.
  * @property {string} cost
  * @property {TrainingKeyDate[]} keyDates
+ * @property {{ headline: string, summary: string }} [durationBlock] When set, Duration and Schedule tab shows headline + summary instead of dated milestones.
  */
 
 /** @type {string[]} */
@@ -68,15 +69,18 @@ export const TRAINING_PROGRAMS = [
       "UI/UX Design & Product Design",
       "IT Project Management & Digital Transformation",
     ],
-    schedule:
-      "Runs as sequenced modules with evening lab blocks and project time; exact session pattern is confirmed at intake. Typical pace is several weeks per module with breaks between cohorts.",
-    cost: "Track fee quoted per intake; group, NGO, and installment options available—contact for the current schedule and pricing.",
-    keyDates: [
-      { label: "Info session", date: "2026-05-10" },
-      { label: "Orientation week begins", date: "2026-05-04" },
-      { label: "First module start", date: "2026-05-06" },
-      { label: "Next module intake", date: "2026-06-02" },
-    ],
+    cost: `Materials fees and any toolkit deposits are confirmed at enrollment; scholarships and sponsor placements may apply.
+
+Registrations: US$15.00
+Fees: Beginner = US$60/ Intermediate = US$75/ Advanced = US$90
+Open to beginners and professionals needing foundational or advanced skills.
+First Installment Payment: 50% of course fees to start`,
+    keyDates: [],
+    durationBlock: {
+      headline: "12 Weeks/24 Training Sessions",
+      summary:
+        "Intensive workshop blocks on Monday, Wednesday, and Friday / Tuesday and Thursday with afternoon sessions; Calendar aligns with tool and materials readiness—details at enrollment.",
+    },
   },
   {
     id: "vocational-track",
@@ -99,16 +103,18 @@ export const TRAINING_PROGRAMS = [
       "Shoe Making & Leather Works",
       "Soap Making & TieDie Making",
     ],
-    schedule:
-      "Intensive workshop blocks on fixed weekdays with morning sessions; electrical units include mandatory safety briefings before tool use. Calendar aligns with tool and materials readiness—details at enrollment.",
-    cost: "Materials fees and any toolkit deposits are confirmed at enrollment; scholarships and sponsor placements may apply.",
-    keyDates: [
-      { label: "Open house", date: "2026-04-18" },
-      { label: "Workshop block begins", date: "2026-05-12" },
-      { label: "Mid-track showcase", date: "2026-06-20" },
-      { label: "Safety briefing (required)", date: "2026-05-30" },
-      { label: "Electrical practice block", date: "2026-06-06" },
-    ],
+    cost: `Materials fees and any toolkit deposits are confirmed at enrollment; scholarships and sponsor placements may apply.
+
+Registrations: US$15.00
+Fees: US$100.00
+Open to beginners and professionals developing core foundational skills.
+First Installment Payment: 50% of course fees to start`,
+    keyDates: [],
+    durationBlock: {
+      headline: "24 Weeks/52 Training Sessions",
+      summary:
+        "Intensive workshop blocks on Monday, Wednesday, and Friday with afternoon sessions; mandatory safety briefings before tool use. Calendar aligns with tool and materials readiness—details at enrollment.",
+    },
   },
   {
     id: "professional-track",
@@ -133,17 +139,18 @@ export const TRAINING_PROGRAMS = [
       "Public Speaking & Presentation Skills",
       "Workplace Ethics & Professional Conduct",
     ],
-    schedule:
-      "Blended Saturdays and weekday evenings with discussion, cases, and short assignments between sessions. Hybrid options where noted in the intake letter.",
-    cost: "Per participant with team caps; in-house delivery for organizations optional. Alumni and partner pricing on request.",
-    keyDates: [
-      { label: "Kickoff webinar", date: "2026-05-15" },
-      { label: "Cohort launch", date: "2026-05-21" },
-      { label: "Registration closes", date: "2026-06-01" },
-      { label: "Mid-track intensive", date: "2026-06-07" },
-      { label: "Project presentations", date: "2026-06-25" },
-      { label: "Track completion", date: "2026-06-28" },
-    ],
+    cost: `Materials fees and any toolkit deposits are confirmed at enrollment; scholarships and sponsor placements may apply.
+
+Registrations: US$15.00
+Fees: US$100.00
+Open to beginners and professionals seeking professional skill development.
+First Installment Payment: 50% of course fees to start`,
+    keyDates: [],
+    durationBlock: {
+      headline: "12 Weeks/24 Training Sessions",
+      summary:
+        "Intensive workshop blocks on Tuesday and Thursday with afternoon sessions; Calendar aligns with tool and materials readiness—details at enrollment.",
+    },
   },
 ];
 
