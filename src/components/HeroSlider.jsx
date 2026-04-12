@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 
 const SLIDE_INTERVAL_MS = 5000;
 
-/** Single background image for every slide; change path to swap photo site-wide. */
-const HERO_IMAGE_SRC = "/hero/slide-1.png";
-const HERO_IMAGE_ALT =
+/** Default hero background when a slide has no `imageSrc`. */
+const DEFAULT_HERO_IMAGE_SRC = "/hero/slide-1.png";
+const DEFAULT_HERO_IMAGE_ALT =
   "Liberia Libra graduates and trainees with certificates in front of a branded banner.";
 
-/** Copy-only slides; background image is shared (see HERO_IMAGE_SRC). */
+/** Optional per-slide `imageSrc` / `imageAlt` / `imageObjectClass` (Tailwind object-*). */
 export const HERO_SLIDES = [
   {
     id: "1",
@@ -18,31 +18,50 @@ export const HERO_SLIDES = [
   },
   {
     id: "2",
-    eyebrow: "Liberia Libra Incorporated",
-    headline: "ICT and vocational training that opens real career paths.",
+    imageSrc: "/hero/slide-2.png",
+    imageAlt:
+      "Trainees in a computer lab during free ICT training, with desktop workstations and a monitor displaying the Liberia Libra Incorporated logo.",
+    imageObjectClass:
+      "object-cover object-[50%_42%] min-[480px]:object-[52%_40%] md:object-center",
+    eyebrow: "Free ICT training programs",
+    headline: "Build digital skills in the lab—structured, practical, and free for eligible participants.",
     subtext:
-      "Structured programs in technology and workplace skills—designed for students, professionals, and teams across Liberia.",
+      "Hands-on sessions cover computer fundamentals, productivity software, and safe online practice so learners can study, work, and compete with confidence.",
   },
   {
     id: "3",
-    eyebrow: "Liberia Libra Incorporated",
-    headline: "Consulting and media support for organizations that want to scale.",
+    imageSrc: "/hero/slide-3.png",
+    imageAlt:
+      "General Catering cohort 5 students in Liberia Libra shirts and caps smile with medals, branded mugs, and awards during graduation preparation.",
+    imageObjectClass:
+      "object-cover object-[50%_38%] min-[480px]:object-[50%_36%] md:object-center",
+    eyebrow: "General Catering — cohort 5",
+    headline: "Graduation preparation for students who earned every milestone.",
     subtext:
-      "From digital strategy to desktop publishing—we help you plan, produce, and deliver with confidence.",
+      "Cohort 5 wraps practical training with recognition, final assessments, and celebration—getting General Catering learners ready to step into work or their next chapter with pride.",
   },
   {
     id: "4",
-    eyebrow: "Liberia Libra Incorporated",
-    headline: "Partnerships built on trust, delivery, and long-term impact.",
+    imageSrc: "/hero/slide-4.png",
+    imageAlt:
+      "Six women in General Catering uniforms and chef hats posing with baked cakes and cupcakes during a vocational training session.",
+    imageObjectClass: "object-cover object-[50%_40%] min-[480px]:object-[50%_38%] md:object-center",
+    eyebrow: "General Catering — vocational track",
+    headline: "Hands-on catering training from kitchen basics to finished service.",
     subtext:
-      "We work with schools, NGOs, and businesses to strengthen capacity and expand opportunity in the region.",
+      "Build real skills in food preparation, baking, hygiene, and presentation—structured for learners who want to work in catering, hospitality, or start their own food business.",
   },
   {
     id: "5",
-    eyebrow: "Liberia Libra Incorporated",
-    headline: "Ready when you are—start with services or say hello.",
+    imageSrc: "/hero/slide-5.png",
+    imageAlt:
+      "Liberia Libra students and partner representatives display signed Memorandum of Understanding documents for the internship program.",
+    imageObjectClass:
+      "object-cover object-[50%_40%] min-[480px]:object-[50%_38%] md:object-center",
+    eyebrow: "Libra students — internship partnership",
+    headline: "Partnership agreements that open real internship placements.",
     subtext:
-      "Explore what we offer, browse training tracks, or reach out through the contact page to begin a conversation.",
+      "Formal MOUs with trusted organizations give Libra learners structured workplace exposure—bridging training and employment through supervised, meaningful experience.",
   },
 ];
 
@@ -50,6 +69,11 @@ export function HeroSlider({ children }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const slide = HERO_SLIDES[index];
+  const heroSrc = slide.imageSrc ?? DEFAULT_HERO_IMAGE_SRC;
+  const heroAlt = slide.imageAlt ?? DEFAULT_HERO_IMAGE_ALT;
+  const heroObjectClass =
+    slide.imageObjectClass ??
+    "object-cover object-[center_30%] min-[480px]:object-[center_35%] md:object-center";
 
   const go = useCallback((delta) => {
     setIndex((i) => {
@@ -69,7 +93,7 @@ export function HeroSlider({ children }) {
 
   return (
     <section
-      className="relative flex min-h-[min(60svh,520px)] overflow-hidden min-[480px]:min-h-[min(72svh,640px)] sm:min-h-[min(80svh,720px)] md:min-h-[min(85vh,760px)]"
+      className="relative flex h-[min(60svh,520px)] overflow-hidden min-[480px]:h-[min(72svh,640px)] sm:h-[min(80svh,720px)] md:h-[min(85vh,760px)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -78,9 +102,10 @@ export function HeroSlider({ children }) {
         aria-hidden
       >
         <img
-          src={HERO_IMAGE_SRC}
-          alt={HERO_IMAGE_ALT}
-          className="absolute inset-0 h-full w-full object-cover object-[center_30%] min-[480px]:object-[center_35%] md:object-center"
+          key={heroSrc}
+          src={heroSrc}
+          alt={heroAlt}
+          className={`absolute inset-0 h-full w-full ${heroObjectClass}`}
           loading="eager"
           fetchPriority="high"
         />
@@ -91,22 +116,26 @@ export function HeroSlider({ children }) {
         <div className="absolute inset-0 bg-black/10" aria-hidden />
       </div>
 
-      <div className="relative z-10 flex w-full flex-col justify-center px-3 py-8 min-[400px]:px-4 min-[480px]:py-12 sm:px-6 sm:py-24">
+      <div className="relative z-10 flex min-h-full w-full flex-col justify-center px-3 py-6 min-[400px]:px-4 min-[480px]:py-10 sm:px-6 sm:py-14 md:py-20">
         <div className="mx-auto w-full min-w-0 max-w-[1120px]">
           <div
             key={slide.id}
             className="motion-reduce:animate-none [animation:hero-copy_0.35s_ease-out_both]"
             aria-live="polite"
           >
-            <p className="text-[0.6rem] font-bold uppercase tracking-[0.1em] text-[var(--color-ll-accent-dim)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)] min-[360px]:text-[0.65rem] min-[400px]:text-xs sm:tracking-[0.15em]">
+            <p className="min-h-[2.75rem] text-[0.6rem] font-bold uppercase tracking-[0.1em] text-[var(--color-ll-accent-dim)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)] min-[360px]:text-[0.65rem] min-[400px]:min-h-[3rem] min-[400px]:text-xs sm:min-h-[2.75rem] sm:tracking-[0.15em]">
               {slide.eyebrow}
             </p>
-            <h1 className="mt-1.5 max-w-[20rem] font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] min-[360px]:mt-2 min-[360px]:max-w-xl min-[360px]:text-2xl min-[360px]:leading-[1.15] min-[480px]:text-3xl sm:mt-3 sm:text-4xl md:text-5xl">
-              {slide.headline}
-            </h1>
-            <p className="mt-3 max-w-lg text-xs leading-relaxed text-white/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.85)] min-[400px]:mt-4 min-[400px]:text-sm sm:mt-5 sm:text-base md:text-lg">
-              {slide.subtext}
-            </p>
+            <div className="mt-1.5 min-h-[6.25rem] min-[360px]:mt-2 min-[360px]:min-h-[7.25rem] min-[480px]:min-h-[8.25rem] sm:mt-3 sm:min-h-[8.75rem] md:min-h-[9.25rem]">
+              <h1 className="max-w-[20rem] font-[family-name:var(--font-display)] text-lg font-bold leading-snug text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] min-[360px]:max-w-xl min-[360px]:text-xl min-[360px]:leading-[1.2] min-[480px]:text-2xl sm:text-3xl md:text-4xl">
+                {slide.headline}
+              </h1>
+            </div>
+            <div className="mt-3 min-h-[8rem] min-[400px]:mt-4 min-[400px]:min-h-[8.5rem] sm:mt-5 sm:min-h-[9rem] md:min-h-[9.5rem]">
+              <p className="max-w-lg text-xs leading-relaxed text-white/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.85)] min-[400px]:text-sm sm:text-base md:text-lg">
+                {slide.subtext}
+              </p>
+            </div>
           </div>
           {children}
         </div>

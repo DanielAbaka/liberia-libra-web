@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { IconIct, IconLayout, IconMedia, IconTraining } from "../components/ServiceIcons.jsx";
 
 export function ServicesPage() {
   const [selectedService, setSelectedService] = useState(null);
@@ -7,6 +8,7 @@ export function ServicesPage() {
   const services = [
     {
       id: "ict",
+      Icon: IconIct,
       title: "ICT consultancy",
       summary:
         "At Liberia Libra Incorporated, we provide expert guidance and solutions in information and communication technology to enhance organizational efficiency and digital growth.",
@@ -31,6 +33,7 @@ export function ServicesPage() {
     },
     {
       id: "media",
+      Icon: IconMedia,
       title: "Media consultancy",
       summary:
         "At Liberia Libra Incorporated, we deliver strategic media solutions, content development, and communication support tailored to your brand's needs.",
@@ -55,6 +58,7 @@ export function ServicesPage() {
     },
     {
       id: "dtp",
+      Icon: IconLayout,
       title: "Desktop publishing",
       summary:
         "At Liberia Libra Incorporated, we offer professional design and publishing services for high-quality documents, marketing materials, and corporate branding.",
@@ -79,6 +83,7 @@ export function ServicesPage() {
     },
     {
       id: "training",
+      Icon: IconTraining,
       title: "Training programs",
       summary:
         "At Liberia Libra Incorporated, we provide expert ICT, Vocational, and Professional training solutions designed to equip individuals and businesses with the skills needed to succeed in today's fast-evolving, tech-driven world.",
@@ -105,15 +110,22 @@ export function ServicesPage() {
             <li
               key={s.id}
               id={s.id}
-              className="min-w-0 scroll-mt-24 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-6"
+              className="flex min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm"
             >
-              <h2 className="text-lg font-semibold leading-snug text-neutral-900 sm:text-xl">
-                {s.title}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base">
-                {s.summary}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div
+                className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#1a1a4b]/[0.07] to-[#5a7a2e]/[0.12]"
+                aria-hidden
+              >
+                <s.Icon className="h-12 w-12 text-[#1a1a4b] sm:h-14 sm:w-14" />
+              </div>
+              <div className="p-4 sm:p-6">
+                <h2 className="text-lg font-semibold leading-snug text-neutral-900 sm:text-xl">
+                  {s.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base">
+                  {s.summary}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedService(s)}
@@ -127,6 +139,7 @@ export function ServicesPage() {
                 >
                   Request a quote
                 </Link>
+              </div>
               </div>
             </li>
           ))}
