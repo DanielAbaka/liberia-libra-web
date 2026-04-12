@@ -1,11 +1,57 @@
 import { useState } from "react";
+import { submitContactToSheet } from "../lib/submitContactToSheet.js";
+
+function errorMessage(code) {
+  switch (code) {
+    case "not_configured":
+      return "This form is not connected yet. Please email us directly or try again later.";
+    case "network":
+      return "We could not reach the server. Check your connection and try again.";
+    case "forbidden":
+      return "Form configuration error. Please contact us by email.";
+    case "validation":
+      return "Please fill in your name and email.";
+    case "busy":
+      return "Too many requests. Please wait a moment and try again.";
+    default:
+      return "Something went wrong. Please try again or email us directly.";
+  }
+}
 
 export function ContactPage() {
-  const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  /** @type {{ type: 'success' } | { type: 'no_sheet' } | { type: 'error', code: string } | null} */
+  const [feedback, setFeedback] = useState(null);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSent(true);
+    setFeedback(null);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const fields = {
+      name: String(fd.get("name") || "").trim(),
+      email: String(fd.get("email") || "").trim(),
+      phone: String(fd.get("phone") || "").trim(),
+      message: String(fd.get("message") || "").trim(),
+    };
+
+    setSubmitting(true);
+    const result = await submitContactToSheet(fields);
+    setSubmitting(false);
+
+    if (result.ok) {
+      setFeedback({ type: "success" });
+      form.reset();
+      return;
+    }
+
+    if (result.error === "not_configured") {
+      setFeedback({ type: "no_sheet" });
+      form.reset();
+      return;
+    }
+
+    setFeedback({ type: "error", code: result.error || "unknown" });
   }
 
   return (
@@ -76,7 +122,8 @@ export function ContactPage() {
                   id="name"
                   name="name"
                   required
-                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
+                  disabled={submitting}
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 enabled:hover:border-neutral-300 sm:text-sm disabled:opacity-60"
                 />
               </div>
               <div>
@@ -92,7 +139,8 @@ export function ContactPage() {
                   type="email"
                   required
                   autoComplete="email"
-                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
+                  disabled={submitting}
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 enabled:hover:border-neutral-300 sm:text-sm disabled:opacity-60"
                 />
               </div>
               <div>
@@ -108,7 +156,8 @@ export function ContactPage() {
                   type="tel"
                   required
                   autoComplete="tel"
-                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
+                  disabled={submitting}
+                  className="mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 enabled:hover:border-neutral-300 sm:text-sm disabled:opacity-60"
                 />
               </div>
               <div>
@@ -123,20 +172,44 @@ export function ContactPage() {
                   name="message"
                   required
                   rows={5}
-                  className="mt-1 w-full rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm"
+                  disabled={submitting}
+                  className="mt-1 w-full rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 enabled:hover:border-neutral-300 sm:text-sm disabled:opacity-60"
                 />
               </div>
             </div>
-            {sent ? (
+            {feedback?.type === "error" ? (
+              <p className="mt-4 text-sm text-red-600" role="alert">
+                {errorMessage(feedback.code)}
+              </p>
+            ) : null}
+            {feedback?.type === "success" ? (
               <p className="mt-4 text-sm text-[var(--color-ll-accent)]" role="status">
-                Demo: form submitted (connect your backend or form service).
+                Thank you — your message was saved. We’ll get back to you soon.
+              </p>
+            ) : null}
+            {feedback?.type === "no_sheet" ? (
+              <p className="mt-4 text-sm text-neutral-600" role="status">
+                Add{" "}
+                <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">
+                  VITE_GOOGLE_SHEETS_WEBAPP_URL
+                </code>{" "}
+                in your site environment to log submissions to Google Sheets. For now, please
+                email{" "}
+                <a
+                  href="mailto:liberialibrainc@gmail.com"
+                  className="font-semibold text-[var(--color-ll-accent)] hover:underline"
+                >
+                  liberialibrainc@gmail.com
+                </a>{" "}
+                with your message so we can respond.
               </p>
             ) : null}
             <button
               type="submit"
-              className="mt-5 w-full min-h-11 rounded-xl bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/30 transition hover:brightness-110 hover:shadow-xl active:scale-[0.99] sm:mt-6 sm:w-auto sm:px-8"
+              disabled={submitting}
+              className="mt-5 w-full min-h-11 rounded-xl bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/30 transition hover:brightness-110 hover:shadow-xl enabled:active:scale-[0.99] disabled:opacity-70 sm:mt-6 sm:w-auto sm:px-8"
             >
-              Send message
+              {submitting ? "Sending…" : "Send message"}
             </button>
           </form>
         </div>
