@@ -46,7 +46,8 @@ jobs:
             exit 1
           fi
           if [[ "$SHEETS_URL" != *"script.google.com"* ]] || [[ "$SHEETS_URL" != *"/exec"* ]]; then
-            echo "::warning::Value should be your Web app URL (https://script.google.com/macros/s/.../exec)"
+            echo "::error::Secret must be the full Web app URL: https://script.google.com/macros/s/.../exec"
+            exit 1
           fi
 
       # GitHub Pages URLs are lowercase; mixed-case repo names break script/CSS loads → blank page
@@ -67,10 +68,7 @@ jobs:
           # Runtime fallback (copied to dist/) — form loads URL from JSON if Vite embed is missing
           node -e "const fs=require('fs');const o={webAppUrl:process.env.SHEETS||''};if(process.env.FORM_SECRET){o.formSecret=process.env.FORM_SECRET;}fs.writeFileSync('public/contact-sheet-config.json',JSON.stringify(o));"
           npm run build
-          if ! grep -Rql 'script\.google\.com' dist/; then
-            echo "::error::dist/ must contain the Sheets URL (JS or contact-sheet-config.json). Check secrets."
-            exit 1
-          fi
+          node -e "const fs=require('fs');const p='dist/contact-sheet-config.json';if(!fs.existsSync(p)){console.error('::error::Missing dist/contact-sheet-config.json. The step that writes public/contact-sheet-config.json before npm run build must be present.');process.exit(1);}const u=String(JSON.parse(fs.readFileSync(p,'utf8')).webAppUrl||'').trim();if(!u.includes('script.google.com')||!u.endsWith('/exec')){console.error('::error::dist/contact-sheet-config.json has an invalid webAppUrl.');process.exit(1);}console.log('OK: contact-sheet-config.json in dist');"
 
       - name: SPA fallback (refresh deep links on GitHub Pages)
         run: cp dist/index.html dist/404.html
