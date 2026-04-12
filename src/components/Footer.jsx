@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { publicAsset } from "../lib/publicAsset.js";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -15,12 +16,15 @@ export function Footer() {
             className="inline-block focus-visible:rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ll-accent)]"
           >
             <img
-              src="/libra-logo.png"
+              src={publicAsset("libra-logo.png")}
               alt="Liberia Libra Incorporated"
-              className="h-14 w-auto max-w-[min(100%,260px)] object-contain object-left min-[400px]:h-16 sm:h-[4.5rem] sm:max-w-[min(100%,280px)]"
+              className="h-[5rem] w-auto max-w-[min(100%,340px)] object-contain object-left min-[400px]:h-[5.75rem] sm:h-28 sm:max-w-[min(100%,380px)]"
+              width={380}
+              height={120}
+              decoding="async"
             />
           </Link>
-          <p className="mt-3 text-xs leading-relaxed text-neutral-600 sm:text-sm">
+          <p className="mt-3 max-w-sm text-xs leading-relaxed text-neutral-600 sm:text-sm">
             Driving Digital Transformation Across Africa
           </p>
         </div>

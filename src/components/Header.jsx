@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { publicAsset } from "../lib/publicAsset.js";
 
 const nav = [
   { to: "/", label: "Home", end: true },
@@ -14,7 +15,7 @@ const nav = [
 
 const linkClass = ({ isActive }) =>
   [
-    "rounded-full px-3.5 py-2 text-sm font-medium transition-all duration-200",
+    "rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200",
     isActive
       ? "bg-white/12 text-white shadow-sm ring-1 ring-white/15"
       : "text-white/70 hover:bg-white/[0.06] hover:text-white",
@@ -25,19 +26,21 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-[color-mix(in_srgb,var(--color-ll-bg)_88%,transparent)] shadow-sm shadow-black/15 backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-2 px-3 py-3 min-[400px]:gap-3 min-[400px]:px-4 sm:gap-4 sm:px-6 sm:py-3.5">
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-2 px-3 py-2 min-[400px]:gap-3 min-[400px]:px-4 sm:gap-4 sm:px-6 sm:py-2.5">
         <NavLink
           to="/"
           className="flex min-w-0 shrink items-center no-underline hover:opacity-95"
           aria-label="Liberia Libra Incorporated — Home"
         >
           <img
-            src="/libra-logo.png"
+            src={publicAsset("libra-logo.png")}
             alt="Liberia Libra Incorporated"
-            width={200}
-            height={50}
-            className="h-8 w-auto max-w-[min(11rem,52vw)] object-contain object-left sm:h-10 sm:max-w-[13rem]"
+            width={280}
+            height={70}
+            className="h-10 w-auto max-w-[min(16rem,calc(100vw-5rem))] object-contain object-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] sm:h-11 sm:max-w-[19rem]"
             decoding="async"
+            fetchPriority="high"
+            loading="eager"
           />
         </NavLink>
 
@@ -54,7 +57,7 @@ export function Header() {
 
         <button
           type="button"
-          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/[0.08] text-white shadow-md shadow-black/20 transition hover:bg-white/[0.12] md:hidden"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/[0.08] text-white shadow-md shadow-black/20 transition hover:bg-white/[0.12] md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
