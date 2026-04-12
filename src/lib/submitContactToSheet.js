@@ -2,9 +2,32 @@
  * POSTs contact form fields to a Google Apps Script web app that appends a row to your Sheet.
  * Uses URL-encoded body to avoid CORS preflight issues with script.google.com.
  *
- * Env (Vite): VITE_GOOGLE_SHEETS_WEBAPP_URL = deployment URL ending in /exec
- * Optional: VITE_CONTACT_FORM_SECRET = must match EXPECTED_SECRET in the Apps Script
+ * URL resolution (first match wins):
+ * 1) VITE_GOOGLE_SHEETS_WEBAPP_URL at build time (Vite)
+ * 2) /contact-sheet-config.json at runtime (written in CI — survives odd embed issues)
+ *
+ * Optional secret: VITE_CONTACT_FORM_SECRET, or formSecret in that JSON (must match Apps Script).
  */
+
+/** @type {Promise<Record<string, unknown> | null> | null} */
+let runtimeConfigPromise = null;
+
+function getRuntimeConfig() {
+  if (runtimeConfigPromise == null) {
+    runtimeConfigPromise = (async () => {
+      try {
+        const base = import.meta.env.BASE_URL || "/";
+        const res = await fetch(`${base}contact-sheet-config.json`, { cache: "no-store" });
+        if (!res.ok) return null;
+        const j = await res.json();
+        return j && typeof j === "object" ? j : null;
+      } catch {
+        return null;
+      }
+    })();
+  }
+  return runtimeConfigPromise;
+}
 
 /**
  * @param {{ name: string, email: string, phone: string, message: string }} fields
@@ -17,8 +40,23 @@ function normalizeSheetsWebAppUrl(raw) {
   return s;
 }
 
+async function resolveWebAppUrl() {
+  const fromEnv = normalizeSheetsWebAppUrl(import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL);
+  if (fromEnv) return fromEnv;
+  const cfg = await getRuntimeConfig();
+  return normalizeSheetsWebAppUrl(cfg?.webAppUrl);
+}
+
+async function resolveFormSecret() {
+  const e = import.meta.env.VITE_CONTACT_FORM_SECRET;
+  if (typeof e === "string" && e.trim()) return e.trim();
+  const cfg = await getRuntimeConfig();
+  const s = cfg?.formSecret;
+  return typeof s === "string" && s.trim() ? s.trim() : "";
+}
+
 export async function submitContactToSheet(fields) {
-  const url = normalizeSheetsWebAppUrl(import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL);
+  const url = await resolveWebAppUrl();
   if (!url) {
     return { ok: false, error: "not_configured" };
   }
@@ -29,8 +67,8 @@ export async function submitContactToSheet(fields) {
   params.set("phone", fields.phone);
   params.set("message", fields.message);
 
-  const secret = import.meta.env.VITE_CONTACT_FORM_SECRET;
-  if (typeof secret === "string" && secret.length > 0) {
+  const secret = await resolveFormSecret();
+  if (secret) {
     params.set("secret", secret);
   }
 

@@ -64,9 +64,11 @@ jobs:
           export VITE_GOOGLE_SHEETS_WEBAPP_URL="$SHEETS"
           export VITE_CONTACT_FORM_SECRET="${FORM_SECRET:-}"
           export VITE_BASE_PATH="/${REPO_RAW,,}/"
+          # Runtime fallback (copied to dist/) — form loads URL from JSON if Vite embed is missing
+          node -e "const fs=require('fs');const o={webAppUrl:process.env.SHEETS||''};if(process.env.FORM_SECRET){o.formSecret=process.env.FORM_SECRET;}fs.writeFileSync('public/contact-sheet-config.json',JSON.stringify(o));"
           npm run build
-          if ! grep -Rql 'script\.google\.com' dist/assets/; then
-            echo "::error::Built assets do not contain script.google.com — the Sheets URL was not embedded. Check secrets and Vite env loading."
+          if ! grep -Rql 'script\.google\.com' dist/; then
+            echo "::error::dist/ must contain the Sheets URL (JS or contact-sheet-config.json). Check secrets."
             exit 1
           fi
 
