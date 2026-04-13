@@ -1,5 +1,9 @@
 import { useState } from "react";
 import {
+  isGoogleFormDirectConfigured,
+  submitGoogleFormDirect,
+} from "../config/googleFormDirect.js";
+import {
   toGoogleFormEmbedUrl,
   toGoogleFormFullPageUrl,
 } from "../lib/googleFormEmbed.js";
@@ -46,6 +50,19 @@ export function ContactPage() {
     };
 
     setSubmitting(true);
+
+    if (isGoogleFormDirectConfigured()) {
+      try {
+        await submitGoogleFormDirect(fields);
+        setFeedback({ type: "success" });
+        form.reset();
+      } catch {
+        setFeedback({ type: "error", code: "network" });
+      }
+      setSubmitting(false);
+      return;
+    }
+
     const result = await submitContactToSheet(fields);
     setSubmitting(false);
 
@@ -227,12 +244,15 @@ export function ContactPage() {
             ) : null}
             {feedback?.type === "no_sheet" ? (
               <p className="mt-4 text-sm text-neutral-600" role="status">
-                Add{" "}
+                Configure{" "}
+                <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">
+                  src/config/googleFormDirect.js
+                </code>{" "}
+                for Google Forms POST, or add{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">
                   VITE_GOOGLE_SHEETS_WEBAPP_URL
                 </code>{" "}
-                in your site environment to log submissions to Google Sheets. For now, please
-                email{" "}
+                for the Apps Script sheet. For now, please email{" "}
                 <a
                   href="mailto:liberialibrainc@gmail.com"
                   className="font-semibold text-[var(--color-ll-accent)] hover:underline"
