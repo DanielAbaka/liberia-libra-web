@@ -24,6 +24,10 @@ import {
   isGoogleVocationalEnrollmentConfigured,
   submitGoogleVocationalEnrollmentDirect,
 } from "../config/googleFormVocationalEnrollment.js";
+import {
+  isGoogleProfessionalEnrollmentConfigured,
+  submitGoogleProfessionalEnrollmentDirect,
+} from "../config/googleFormProfessionalEnrollment.js";
 
 const initialForm = {
   fullName: "",
@@ -322,6 +326,29 @@ export function TrainingPage() {
         await submitGoogleVocationalEnrollmentDirect({
           program: enrollLabel,
           course: form.vocationalCourse,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        });
+        setEnrollSubmitMode("google");
+        setSent(true);
+      } catch {
+        setEnrollError("network");
+      } finally {
+        setEnrollSubmitting(false);
+      }
+      return;
+    }
+
+    const isProfessional = enrollProgramId === "professional-track";
+    if (isProfessional && isGoogleProfessionalEnrollmentConfigured()) {
+      setEnrollError(null);
+      setEnrollSubmitting(true);
+      try {
+        await submitGoogleProfessionalEnrollmentDirect({
+          program: enrollLabel,
+          course: form.professionalCourse,
           fullName: form.fullName.trim(),
           email: form.email.trim(),
           phone: form.phone.trim(),
