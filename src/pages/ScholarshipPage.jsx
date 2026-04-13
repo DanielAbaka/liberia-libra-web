@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 import { SCHOLARSHIP_DONORS } from "../data/scholarshipDonors.js";
 import { LIBERIA_COUNTIES } from "../data/liberiaCounties.js";
 import { publicAsset } from "../lib/publicAsset.js";
+import {
+  isGoogleScholarshipConfigured,
+  SCHOLARSHIP_EDUCATION_FOR_GOOGLE,
+  SCHOLARSHIP_GENDER_FOR_GOOGLE,
+  SCHOLARSHIP_PROGRAM_FOR_GOOGLE,
+  submitGoogleScholarshipDirect,
+} from "../config/googleFormScholarship.js";
 
 const inputClass =
   "mt-1 w-full min-h-11 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5 text-base text-neutral-900 outline-none transition focus:border-[var(--color-ll-accent)] focus:ring-2 focus:ring-[var(--color-ll-accent)]/20 sm:text-sm";
@@ -38,9 +45,47 @@ function DonorAvatar({ donor }) {
 
 export function ScholarshipPage() {
   const [sent, setSent] = useState(false);
+  const [submittedViaGoogle, setSubmittedViaGoogle] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setSubmitError(null);
+    const formEl = e.currentTarget;
+    const fd = new FormData(formEl);
+
+    if (isGoogleScholarshipConfigured()) {
+      setSubmitting(true);
+      try {
+        const genderKey = String(fd.get("gender") || "");
+        const programKey = String(fd.get("program") || "");
+        const eduKey = String(fd.get("education") || "");
+        await submitGoogleScholarshipDirect({
+          fullName: String(fd.get("name") || "").trim(),
+          email: String(fd.get("email") || "").trim(),
+          phone: String(fd.get("phone") || "").trim(),
+          dateOfBirth: String(fd.get("dateOfBirth") || "").trim(),
+          gender: SCHOLARSHIP_GENDER_FOR_GOOGLE[genderKey] ?? genderKey,
+          county: String(fd.get("county") || "").trim(),
+          community: String(fd.get("community") || "").trim(),
+          program: SCHOLARSHIP_PROGRAM_FOR_GOOGLE[programKey] ?? programKey,
+          education: SCHOLARSHIP_EDUCATION_FOR_GOOGLE[eduKey] ?? eduKey,
+          financialNeed: String(fd.get("financialNeed") || "").trim(),
+          whyProgram: String(fd.get("statement") || "").trim(),
+        });
+        setSubmittedViaGoogle(true);
+        setSent(true);
+        formEl.reset();
+      } catch {
+        setSubmitError("network");
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    setSubmittedViaGoogle(false);
     setSent(true);
   }
 
@@ -141,6 +186,14 @@ export function ScholarshipPage() {
             className="mt-8 max-w-2xl rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-card sm:p-6"
           >
             <div className="space-y-3 sm:space-y-4">
+              {submitError === "network" ? (
+                <p
+                  className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900"
+                  role="alert"
+                >
+                  We could not reach the form. Check your connection and try again.
+                </p>
+              ) : null}
               <div>
                 <label htmlFor="sch-name" className={labelClass}>
                   Full name *
@@ -178,12 +231,13 @@ export function ScholarshipPage() {
               <div className="grid gap-3 min-[480px]:grid-cols-2 min-[480px]:gap-4">
                 <div>
                   <label htmlFor="sch-dob" className={labelClass}>
-                    Date of birth
+                    Date of birth *
                   </label>
                   <input
                     id="sch-dob"
                     name="dateOfBirth"
                     type="date"
+                    required
                     className={inputClass}
                   />
                 </div>
@@ -316,15 +370,25 @@ export function ScholarshipPage() {
             </div>
             {sent ? (
               <p className="mt-4 text-sm text-[var(--color-ll-accent)]" role="status">
-                Thank you—your application has been recorded (demo: connect a backend or
-                form service to process submissions).
+                {submittedViaGoogle ? (
+                  <>
+                    Thank you—your application has been submitted. We’ll review it and
+                    follow up by email or phone.
+                  </>
+                ) : (
+                  <>
+                    Thank you—your application has been recorded (demo: connect a backend
+                    or form service to process submissions).
+                  </>
+                )}
               </p>
             ) : null}
             <button
               type="submit"
-              className="mt-6 w-full min-h-11 rounded-xl bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/30 transition hover:brightness-110 hover:shadow-xl active:scale-[0.99] sm:w-auto sm:px-8"
+              disabled={submitting}
+              className="mt-6 w-full min-h-11 rounded-xl bg-[var(--color-ll-accent)] py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-ll-accent)]/30 transition hover:brightness-110 hover:shadow-xl active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:px-8"
             >
-              Submit application
+              {submitting ? "Submitting…" : "Submit application"}
             </button>
           </form>
         </section>
