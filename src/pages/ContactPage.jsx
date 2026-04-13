@@ -1,5 +1,12 @@
 import { useState } from "react";
+import {
+  toGoogleFormEmbedUrl,
+  toGoogleFormFullPageUrl,
+} from "../lib/googleFormEmbed.js";
 import { submitContactToSheet } from "../lib/submitContactToSheet.js";
+
+/** Google Form share link (forms.gle or docs.google.com/.../viewform). Embeds on Contact; leave "" to use the built-in form + Apps Script → Sheet instead. */
+const GOOGLE_CONTACT_FORM_URL = "";
 
 function errorMessage(code) {
   switch (code) {
@@ -19,6 +26,9 @@ function errorMessage(code) {
 }
 
 export function ContactPage() {
+  const googleFormEmbed = toGoogleFormEmbedUrl(GOOGLE_CONTACT_FORM_URL);
+  const googleFormFullPage = toGoogleFormFullPageUrl(GOOGLE_CONTACT_FORM_URL);
+
   const [submitting, setSubmitting] = useState(false);
   /** @type {{ type: 'success' } | { type: 'no_sheet' } | { type: 'error', code: string } | null} */
   const [feedback, setFeedback] = useState(null);
@@ -62,8 +72,9 @@ export function ContactPage() {
             Contact
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-neutral-600 sm:text-base">
-            Reach us by email, visit during office hours, or send a message using
-            the form—we’ll get back to you as soon as we can.
+            {googleFormEmbed
+              ? "Reach us by email, visit during office hours, or use the Google form — responses are saved for our team automatically."
+              : "Reach us by email, visit during office hours, or send a message using the form—we’ll get back to you as soon as we can."}
           </p>
           <ul className="mt-6 space-y-3 text-xs sm:mt-8 sm:space-y-4 sm:text-sm">
             <li>
@@ -106,6 +117,33 @@ export function ContactPage() {
         </div>
 
         <div className="min-w-0">
+          {googleFormEmbed ? (
+            <div className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card">
+              <div className="border-b border-neutral-200/90 px-4 py-3 sm:px-6">
+                <p className="text-sm font-medium text-neutral-900">Contact form</p>
+                <p className="mt-1 text-xs text-neutral-600">
+                  Having trouble with the embedded form?{" "}
+                  <a
+                    href={googleFormFullPage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-[var(--color-ll-accent)] hover:underline"
+                  >
+                    Open it in a new tab
+                  </a>
+                  .
+                </p>
+              </div>
+              <iframe
+                title="Contact — Google Form"
+                src={googleFormEmbed}
+                className="h-[min(920px,85vh)] w-full border-0 bg-neutral-50/50"
+                loading="lazy"
+              />
+            </div>
+          ) : null}
+
+          {!googleFormEmbed ? (
           <form
             onSubmit={handleSubmit}
             className="rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-card sm:p-6"
@@ -212,6 +250,7 @@ export function ContactPage() {
               {submitting ? "Sending…" : "Send message"}
             </button>
           </form>
+          ) : null}
         </div>
       </div>
     </div>
