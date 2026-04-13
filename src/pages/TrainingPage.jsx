@@ -16,6 +16,10 @@ import {
 } from "../data/trainingPrograms.js";
 import { publicAsset } from "../lib/publicAsset.js";
 import { liberiaPublicHolidaysInMonth } from "../lib/liberiaPublicHolidays.js";
+import {
+  isGoogleIctEnrollmentConfigured,
+  submitGoogleIctEnrollmentDirect,
+} from "../config/googleFormIctEnrollment.js";
 
 const initialForm = {
   fullName: "",
@@ -25,6 +29,7 @@ const initialForm = {
   trainingLevel: "",
   trainingCourse: "",
   vocationalCourse: "",
+  professionalCourse: "",
 };
 
 const DETAIL_TABS = [
@@ -182,6 +187,10 @@ export function TrainingPage() {
   const [enrollProgramId, setEnrollProgramId] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [sent, setSent] = useState(false);
+  const [enrollSubmitting, setEnrollSubmitting] = useState(false);
+  /** @type {'google' | 'demo' | null} */
+  const [enrollSubmitMode, setEnrollSubmitMode] = useState(null);
+  const [enrollError, setEnrollError] = useState(null);
 
   const [calYear, setCalYear] = useState(() => new Date().getFullYear());
   const [calMonth, setCalMonth] = useState(() => new Date().getMonth());
@@ -229,6 +238,9 @@ export function TrainingPage() {
         setEnrollOpen(false);
         setSent(false);
         setEnrollProgramId(null);
+        setEnrollSubmitMode(null);
+        setEnrollError(null);
+        setEnrollSubmitting(false);
       }
     };
     document.addEventListener("keydown", onKey);
@@ -254,6 +266,8 @@ export function TrainingPage() {
     setEnrollProgramId(programId);
     setForm({ ...initialForm });
     setSent(false);
+    setEnrollSubmitMode(null);
+    setEnrollError(null);
     setEnrollOpen(true);
   }
 
@@ -261,10 +275,42 @@ export function TrainingPage() {
     setEnrollOpen(false);
     setSent(false);
     setEnrollProgramId(null);
+    setEnrollSubmitMode(null);
+    setEnrollError(null);
+    setEnrollSubmitting(false);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    const isIct = enrollProgramId === "ict-track";
+
+    if (isIct && isGoogleIctEnrollmentConfigured()) {
+      setEnrollError(null);
+      setEnrollSubmitting(true);
+      try {
+        const levelLabel =
+          ICT_TRAINING_LEVEL_OPTIONS.find((o) => o.value === form.trainingLevel)?.label ??
+          form.trainingLevel;
+        await submitGoogleIctEnrollmentDirect({
+          program: enrollLabel,
+          trainingLevel: levelLabel,
+          trainingCourse: form.trainingCourse,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        });
+        setEnrollSubmitMode("google");
+        setSent(true);
+      } catch {
+        setEnrollError("network");
+      } finally {
+        setEnrollSubmitting(false);
+      }
+      return;
+    }
+
+    setEnrollSubmitMode("demo");
     setSent(true);
   }
 
@@ -734,9 +780,18 @@ export function TrainingPage() {
                 className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800 sm:p-4"
                 role="status"
               >
-                Thank you, <strong>{form.fullName || "there"}</strong>. Your interest in{" "}
-                <strong>{enrollLabel}</strong> has been recorded (demo—connect to your
-                backend or form service).
+                Thank you, <strong>{form.fullName || "there"}</strong>.{" "}
+                {enrollSubmitMode === "google" ? (
+                  <>
+                    Your <strong>{enrollLabel}</strong> pre-enrollment has been submitted.
+                    We’ll follow up with schedule and next steps.
+                  </>
+                ) : (
+                  <>
+                    Your interest in <strong>{enrollLabel}</strong> has been recorded
+                    (demo—connect to your backend or form service).
+                  </>
+                )}
                 {enrollProgramId === "ict-track" && form.trainingLevel ? (
                   <>
                     {" "}
@@ -765,6 +820,14 @@ export function TrainingPage() {
             </>
           ) : (
             <form className="mt-5 space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
+              {enrollError === "network" ? (
+                <p
+                  className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900"
+                  role="alert"
+                >
+                  We could not reach the form. Check your connection and try again.
+                </p>
+              ) : null}
               <div>
                 <label htmlFor="pre-course" className="block text-xs font-medium sm:text-sm">
                   Program
@@ -932,9 +995,10 @@ export function TrainingPage() {
               <div className="flex flex-col gap-2 pt-2 min-[400px]:flex-row">
                 <button
                   type="submit"
-                  className="min-h-11 w-full rounded-lg bg-[var(--color-ll-accent)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110 min-[400px]:w-auto"
+                  disabled={enrollSubmitting}
+                  className="min-h-11 w-full rounded-lg bg-[var(--color-ll-accent)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 min-[400px]:w-auto"
                 >
-                  Submit registration
+                  {enrollSubmitting ? "Submitting…" : "Submit registration"}
                 </button>
                 <button
                   type="button"
