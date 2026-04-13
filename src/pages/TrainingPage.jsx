@@ -20,6 +20,10 @@ import {
   isGoogleIctEnrollmentConfigured,
   submitGoogleIctEnrollmentDirect,
 } from "../config/googleFormIctEnrollment.js";
+import {
+  isGoogleVocationalEnrollmentConfigured,
+  submitGoogleVocationalEnrollmentDirect,
+} from "../config/googleFormVocationalEnrollment.js";
 
 const initialForm = {
   fullName: "",
@@ -295,6 +299,29 @@ export function TrainingPage() {
           program: enrollLabel,
           trainingLevel: levelLabel,
           trainingCourse: form.trainingCourse,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        });
+        setEnrollSubmitMode("google");
+        setSent(true);
+      } catch {
+        setEnrollError("network");
+      } finally {
+        setEnrollSubmitting(false);
+      }
+      return;
+    }
+
+    const isVocational = enrollProgramId === "vocational-track";
+    if (isVocational && isGoogleVocationalEnrollmentConfigured()) {
+      setEnrollError(null);
+      setEnrollSubmitting(true);
+      try {
+        await submitGoogleVocationalEnrollmentDirect({
+          program: enrollLabel,
+          course: form.vocationalCourse,
           fullName: form.fullName.trim(),
           email: form.email.trim(),
           phone: form.phone.trim(),
