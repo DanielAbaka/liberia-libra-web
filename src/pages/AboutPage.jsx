@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 /** Optional `photo` / `photoObjectPosition` (Tailwind classes, e.g. `object-[50%_18%]`) */
@@ -53,6 +54,27 @@ const TEAM = [
     photo: "/team/francess-j-diah.png",
     photoObjectPosition: "object-top",
     bio: "Supports front-desk coordination, office correspondence, and day-to-day administrative tasks for staff and visitors.",
+  },
+  {
+    name: "Julie Siah Johnney",
+    role: "Vocational Instructor - Cosmetology",
+    photo: "/team/julie-siah-johnney.png",
+    photoObjectPosition: "object-[50%_22%]",
+    bio: "Leads practical cosmetology instruction and supports learners with salon-ready techniques, safety standards, and client care skills.",
+  },
+  {
+    name: "Morris Jallah",
+    role: "Vocational Instructor - Interior Decoration",
+    photo: "/team/morris-jallah.png",
+    photoObjectPosition: "object-[50%_16%]",
+    bio: "Leads practical interior decoration training and supports learners in space styling, finishing techniques, and design presentation skills.",
+  },
+  {
+    name: "Ruth Karbiah",
+    role: "Vocational Instructor - General Catering",
+    photo: "/team/ruth-karbiah.png",
+    photoObjectPosition: "object-[50%_16%]",
+    bio: "Leads practical general catering instruction and supports learners in food preparation, hygiene standards, and service delivery skills.",
   },
 ];
 
@@ -171,9 +193,10 @@ const ABOUT_PILLARS = [
 ];
 
 function TeamPhoto({ member }) {
+  const [imgError, setImgError] = useState(false);
   const wrap = (node) => <div className={teamMediaWrapClass}>{node}</div>;
 
-  if (member.photo) {
+  if (member.photo && !imgError) {
     const objectPos = member.photoObjectPosition ?? "object-center";
     return wrap(
       <div className="aspect-square w-full rounded-full bg-neutral-200 p-[3px]">
@@ -184,6 +207,7 @@ function TeamPhoto({ member }) {
             className={`block h-full w-full object-cover ${objectPos}`}
             loading="lazy"
             decoding="async"
+            onError={() => setImgError(true)}
           />
         </div>
       </div>,
