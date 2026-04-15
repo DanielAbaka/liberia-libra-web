@@ -76,6 +76,13 @@ const TEAM = [
     photoObjectPosition: "object-[50%_16%]",
     bio: "Leads practical general catering instruction and supports learners in food preparation, hygiene standards, and service delivery skills.",
   },
+  {
+    name: "Betty A.M Flahn",
+    role: "Business Strategies Advisor",
+    photo: "/team/betty-a-m-flahn.png",
+    photoObjectPosition: "object-[50%_18%]",
+    bio: "Advises on business strategy, growth planning, and program-market alignment to strengthen organizational impact and sustainability.",
+  },
 ];
 
 const teamMediaWrapClass =
